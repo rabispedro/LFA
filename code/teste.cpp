@@ -6,6 +6,73 @@
 
 using namespace std;
 
+/*	ATRIBUTOS GERAIS DE UM AUTOMATO
+*	Estado Inicial <String>: estado por onde se inicia um automato.
+*	Estados Finais <Vetor de String>: conjunto de estados aceitos pelo automato.
+*	Estados <Vector de String>: conjunto de estados pertencentes ao automato.
+*	Alfabeto <Vector de String>: conjunto de simbolos que pertencem ao automato.
+*	Função de Transição <Map de Vector de Pair de String,String>: conjunto de regras de interação entre os estados de um automato.
+*	Leitura de arquivo: ler arquivos e configurar o automato com base neste.
+*	
+*	----------------------------------------------------------------------------
+*	
+*	INTERPRETAÇÃO (pertence ao alfabeto)
+*	{"a", "b", "c"}
+*	{"ALFA", "BETA", "GAMA"}
+*	
+*	"abc" -> ERRADO
+*	"a b c" -> CERTO
+*	"ALFABETAGAMA" -> ERRADO
+*	"ALFA BETA GAMA" -> CERTO
+*
+*	----------------------------------------------------------------------------
+*	
+*	LEITURA DO ARQUIVO
+*	Uso de TAGS: [TAG]...[-TAG]
+*	Chamada de setters.
+*	
+*	Função de Transição:
+*	q0 a q1
+*	q0 b q2
+*	q1 b q2
+*	q2 c q3
+*	q3 d q0
+*	q3 e q1
+*	
+*		Guardar o estado atual e o ultimo estado;
+*		Preencher o vector do estado atual;
+*		Ao chegar a um estado atual diferente do ultimo estado, setFuncaoTransicao(string, vector)
+*	
+*	DEMONSTRAÇÃO DA ESTRUTURA: FUNÇÕES DE TRANSIÇÃO
+*	MAP <first, second>
+*	VECTOR[index] = value
+*	PAIR <first, second>
+*	
+*	[q0]
+*		|---"a"--->[q1]
+*		|---"b"--->[q2]
+*	[q1]
+*		|---"b"--->[q2]
+*	[q2]
+*		|---"c"--->[q3]
+*	[q3]
+*		|---"d"--->[q0]
+*		|---"e"--->[q1]
+*	
+*	map<string, vector<pair<string, string>>>
+*	------------------------------------------
+*	q0 => ("a"|"q1") -> ("b"|"q2")
+*	------------------------------------------
+*	q0 -> index[0] = ("a"|"q1")
+*	q0 -> index[1] = ("b"|"q2") 
+*	------------------------------------------
+*	q0 -> index[0].first = "a"
+*	q0 -> index[0].second = "q1"
+*	q0 -> index[1].first = "b"
+*	q0 -> index[2].second = "q2"
+*/
+
+
 class Automata{
 	private:
 		string m_Descricao;
@@ -20,14 +87,17 @@ class Automata{
 		map<string,vector<pair<string,string>>> m_FuncaoTransicao;
 	public:
 		Automata(string filename){
-			cout<<"File: "<<filename<<"\n";
+			cout<<"\tFile: "<<filename<<"\n\n";
 			ifstream reader(filename);
 			string lineFromFile;
 			string temp;
 			int count=1;
+			vector<string> vecStr;
+			vector<pair<string,string>> vecPair;
+			string estadoAnterior;
 
 			while(getline(reader,lineFromFile)){
-				cout<<"["<<count++<<"]:\t"<<lineFromFile<<"\n";
+				cout<<count++<<"|  "<<lineFromFile<<"\n";
 				if(lineFromFile.find("[DESCRICAO]") != string::npos){
 					//	Descricao
 					temp = extractStringBetweenTags(lineFromFile, "[DESCRICAO]", "[-DESCRICAO]");
@@ -46,6 +116,36 @@ class Automata{
 				}else if(lineFromFile.find("[FUNCAO TRANSICAO]") != string::npos){
 					//	Função Transição
 
+					//	Primeira linha da Função Transição
+					getline(reader,lineFromFile);
+					while(!(lineFromFile.find("[-FUNCAO TRANSICAO]") != string::npos)){
+						vecStr = vectorization(lineFromFile);
+
+							// Primeiro até penúltimo Estado Inicial diferente
+						if((estadoAnterior.empty()) || (estadoAnterior == vecStr.at(0))){
+							estadoAnterior = vecStr.at(0);
+							vecPair.push_back(pair<string, string>(vecStr.at(1), vecStr.at(2)));
+						}else{
+							setFuncaoTransicao(estadoAnterior, vecPair);
+							estadoAnterior.clear();
+							vecPair.clear();
+							
+							//	Adiciona o conteudo do novo estado
+							estadoAnterior = vecStr.at(0);
+							vecPair.push_back(pair<string, string>(vecStr.at(1), vecStr.at(2)));
+						}
+
+						//	Proxima linha da Função Transição
+						getline(reader,lineFromFile);
+						
+						//	Último Estado Atual
+						if(lineFromFile.find("[-FUNCAO TRANSICAO]") != string::npos){
+							setFuncaoTransicao(estadoAnterior, vecPair);
+							estadoAnterior.clear();
+							vecPair.clear();
+						}
+					}
+
 				}else if(lineFromFile.find("[ESTADO INICIAL]") != string::npos){
 					//	Estado Inicial
 					temp = extractStringBetweenTags(lineFromFile, "[ESTADO INICIAL]", "[-ESTADO INICIAL]");
@@ -58,9 +158,8 @@ class Automata{
 					temp.clear();
 				}
 			}
-			cout<<"\n\n";
+			cout<<"\n";
 		}
-
 
 		void setDescricao(string descricao){
 			m_Descricao = descricao;
@@ -88,7 +187,6 @@ class Automata{
 		string getEstadoInicial(){
 			return m_EstadoInicial;
 		}
-
 
 		void setEstadosFinais(vector<string> estadosFinais){
 			m_EstadosFinais.clear();
@@ -121,23 +219,93 @@ class Automata{
 			return m_FuncaoTransicao;
 		}
 
-		void addVec(string estadoAtual, pair<string,string>parAtual, vector<pair<string,string>>* vecAtual){
-			// vector<pair<string,string>> vecPar;
-			// vecPar.push_back(pair<string,string>("a","q1"));
-			// vecPar.push_back(pair<string,string>("b","q2"));
-			// funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q0",vecPar));
-			// vecPar.clear();
-			vecAtual->push_back(parAtual);
-		}
-
 		void resetFuncaoTransicao(){
 			m_FuncaoTransicao.clear();
 		}
 
 		bool verificaCadeia(vector<string> entrada){
+			vector<string> alfabeto = getAlfabeto();
+			bool flag = true;
 
+			//	Verificar se a entrada pertence ao alfabeto
+			for(int i=0; i<entrada.size(); i++){
+				for(int j=0; j<alfabeto.size(); j++){
+					if(entrada.at(i) == alfabeto.at(j)){
+						flag = true;
+					}
+				}
+				if(!flag){
+					return false;
+				}
+				flag = false;
+			}
+			cout<<"Entrada pertence ao alfabeto!\n";
+
+			string estadoAtual = getEstadoInicial();
+			map<string,vector<pair<string,string>>> funcaoTransicao = getFuncaoTransicao();
+			/*
+			cout<<"Funcao Transicao:\n";
+			for(auto it : funcaoTransicao){
+				cout<<"\t["<<it.first<<"]\n";
+				for(int i=0; i<it.second.size();i++){
+					cout<<"\t  |---"<<it.second.at(i).first<<"--->["<<it.second.at(i).second<<"]\n";
+				}
+			}
+			cout<<"\n";
+			*/
 			
-			return true;
+			string estadoAvant;
+
+			/*	COLINHA RAPIDA
+			*	map<string, vector<pair<string, string>>>
+			*	------------------------------------------
+			*	q0 => ("a"|"q1") -> ("b"|"q2")
+			*	------------------------------------------
+			*	q0 -> index[0] = ("a"|"q1")
+			*	q0 -> index[1] = ("b"|"q2") 
+			*	------------------------------------------
+			*	q0 -> index[0].first = "a"
+			*	q0 -> index[0].second = "q1"
+			*	q0 -> index[1].first = "b"
+			*	q0 -> index[2].second = "q2"
+			*/
+
+			for(int i=0; i<entrada.size(); i++){
+				cout<<"estadoAtual: "<<estadoAtual<<"\n";
+				cout<<"simboloAtual: "<<entrada.at(i)<<"\n";
+				cout<<"\n";
+				for(auto it: funcaoTransicao){
+					if(estadoAtual == it.first){
+						cout<<"Estado Atual: "<<estadoAtual<<"\n";
+						for(int j=0; j<it.second.size(); j++){
+							// cout<<"Simbolo Atual: "<<it.second.at(j).first<<"\n";
+							if(entrada.at(i) == it.second.at(j).first){
+								cout<<"Simbolo Encontrado: "<<entrada.at(i)<<"\n";
+								estadoAtual = it.second.at(j).second;
+								break;
+							}
+						}
+						break;
+					}
+					// cout<<"Estado Atual: "<<it.first<<"\n";
+					// cout<<"Simbolo Atual: "<<it.second.at(0).first<<"\n";
+					// cout<<"Estado Avancado: "<<it.second.at(0).second<<"\n";
+					// cout<<"\n\n";
+				}
+				
+			}
+
+			cout<<"ESTADO FINAL: "<<estadoAtual<<"\n";
+
+			//	Verificação do Último Estado da entrada com os Estados Finais do Automato
+			vector<string> estadosFinais = getEstadosFinais();
+			for(int i=0; i<estadosFinais.size(); i++){
+				if(estadoAtual == estadosFinais.at(i)){
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		string extractStringBetweenTags(string stringToSearch, string startTag, string endTag){
@@ -164,8 +332,6 @@ class Automata{
 		}
 
 		void show(){
-			cout<<"Automato Finito Deterministico (AFD):\n";
-
 			//	Descrição
 			cout<<"Descricao: "<<m_Descricao<<"\n";
 
@@ -208,26 +374,6 @@ class Automata{
 			cout<<"\n\n";
 		}
 }typedef AFD;
-
-/*	ATRIBUTOS GERAIS DE UM AUTOMATO
-*	Estado Inicial: estado por onde se inicia um automato.
-*	Estados Finais: conjunto de estados aceitos pelo automato.
-*	Estados: conjunto de estados pertencentes ao automato.
-*	Alfabeto: conjunto de simbolos que pertencem ao automato.
-*	Função de Transição: conjunto de regras de interação entre os estados de um automato.
-*	Leitura de arquivo: ler arquivos e configurar o automato com base neste.
-*	
-*/
-
-/*	INTERPRETAÇÃO (pertence ao alfabeto)
-*	{"a", "b", "c"}
-*	{"ALFA", "BETA", "GAMA"}
-*	
-*	"abc" -> ERRADO
-*	"a b c" -> CERTO
-*	"ALFABETAGAMA" -> ERRADO
-*	"ALFA BETA GAMA" -> CERTO
-*/
 
 int main(){
 	AFD autobot("AFD.txt");/*
@@ -312,55 +458,15 @@ int main(){
 
 	autobot.show();
 
+	vector<string> myVec;
+	myVec.push_back("0");
+	myVec.push_back("1");
+	myVec.push_back("0");
+	myVec.push_back("0");
+
+	cout<<autobot.verificaCadeia(myVec)<<"\n";
 	return 0;	
 }
-
-/*	LEITURA DO ARQUIVO
-*	Uso de TAGS: [TAG]...[-TAG]
-*	Chamada de setters.
-*	
-*	Função de Transição:
-*	q0 a q1
-*	q0 b q2
-*	q1 b q2
-*	q2 c q3
-*	q3 d q0
-*	q3 e q1
-*	
-*		Guardar o estado atual e o ultimo estado;
-*		Preencher o vector do estado atual;
-*		Ao chegar a um estado atual diferente do ultimo estado, setFuncaoTransicao(string, vector)
-*	
-*/
-
-/*	DEMONSTRAÇÃO DA ESTRUTURA: FUNÇÕES DE TRANSIÇÃO
-*	MAP <first, second>
-*	VECTOR[index] = value
-*	PAIR <first, second>
-*	
-*	[q0]
-*		|---"a"--->[q1]
-*		|---"b"--->[q2]
-*	[q1]
-*		|---"b"--->[q2]
-*	[q2]
-*		|---"c"--->[q3]
-*	[q3]
-*		|---"d"--->[q0]
-*		|---"e"--->[q1]
-*	
-*	map<string, vector<pair<string, string>>>
-*	------------------------------------------
-*	q0 => ("a"|"q1") -> ("b"|"q2")
-*	------------------------------------------
-*	q0 -> index[0] = ("a"|"q1")
-*	q0 -> index[1] = ("b"|"q2") 
-*	------------------------------------------
-*	q0 -> index[0].first = "a"
-*	q0 -> index[0].second = "q1"
-*	q0 -> index[1].first = "b"
-*	q0 -> index[2].second = "q2"
-*/
 
 // map<string, vector<string>> myMap;
 // vector<string> aux;
