@@ -3,6 +3,8 @@
 #include<map>
 #include<utility>
 #include<fstream>
+#include<string>
+#include<limits>
 
 using namespace std;
 
@@ -72,6 +74,8 @@ using namespace std;
 *	q0 -> index[2].second = "q2"
 */
 
+vector<string> vectorization(string str);
+string addSpace(string str);
 
 class Automata{
 	private:
@@ -225,74 +229,41 @@ class Automata{
 
 		bool verificaCadeia(vector<string> entrada){
 			vector<string> alfabeto = getAlfabeto();
-			bool flag = true;
+			bool flag;
 
 			//	Verificar se a entrada pertence ao alfabeto
 			for(int i=0; i<entrada.size(); i++){
+				flag = false;
 				for(int j=0; j<alfabeto.size(); j++){
 					if(entrada.at(i) == alfabeto.at(j)){
 						flag = true;
 					}
 				}
 				if(!flag){
+					cout<<"Erro: entrada nao percente ao Alfabeto do Automato.\n\n";
 					return false;
 				}
 				flag = false;
 			}
-			cout<<"Entrada pertence ao alfabeto!\n";
 
 			string estadoAtual = getEstadoInicial();
 			map<string,vector<pair<string,string>>> funcaoTransicao = getFuncaoTransicao();
-			/*
-			cout<<"Funcao Transicao:\n";
-			for(auto it : funcaoTransicao){
-				cout<<"\t["<<it.first<<"]\n";
-				for(int i=0; i<it.second.size();i++){
-					cout<<"\t  |---"<<it.second.at(i).first<<"--->["<<it.second.at(i).second<<"]\n";
-				}
-			}
-			cout<<"\n";
-			*/
 			
-			string estadoAvant;
-
-			/*	COLINHA RAPIDA
-			*	map<string, vector<pair<string, string>>>
-			*	------------------------------------------
-			*	q0 => ("a"|"q1") -> ("b"|"q2")
-			*	------------------------------------------
-			*	q0 -> index[0] = ("a"|"q1")
-			*	q0 -> index[1] = ("b"|"q2") 
-			*	------------------------------------------
-			*	q0 -> index[0].first = "a"
-			*	q0 -> index[0].second = "q1"
-			*	q0 -> index[1].first = "b"
-			*	q0 -> index[2].second = "q2"
-			*/
-
 			for(int i=0; i<entrada.size(); i++){
-				cout<<"estadoAtual: "<<estadoAtual<<"\n";
-				cout<<"simboloAtual: "<<entrada.at(i)<<"\n";
-				cout<<"\n";
 				for(auto it: funcaoTransicao){
 					if(estadoAtual == it.first){
-						cout<<"Estado Atual: "<<estadoAtual<<"\n";
+						cout<<"["<<estadoAtual<<"]---\"";
 						for(int j=0; j<it.second.size(); j++){
-							// cout<<"Simbolo Atual: "<<it.second.at(j).first<<"\n";
 							if(entrada.at(i) == it.second.at(j).first){
-								cout<<"Simbolo Encontrado: "<<entrada.at(i)<<"\n";
+								cout<<entrada.at(i)<<"\"--->";
 								estadoAtual = it.second.at(j).second;
+								cout<<"["<<estadoAtual<<"]\n";
 								break;
 							}
 						}
 						break;
 					}
-					// cout<<"Estado Atual: "<<it.first<<"\n";
-					// cout<<"Simbolo Atual: "<<it.second.at(0).first<<"\n";
-					// cout<<"Estado Avancado: "<<it.second.at(0).second<<"\n";
-					// cout<<"\n\n";
 				}
-				
 			}
 
 			cout<<"ESTADO FINAL: "<<estadoAtual<<"\n";
@@ -305,6 +276,7 @@ class Automata{
 				}
 			}
 
+			cout<<"Erro: o ultimo estado atingido nao corresponde a nenhum dos estados finais.\n\n";
 			return false;
 		}
 
@@ -313,22 +285,6 @@ class Automata{
 			int count = (stringToSearch.size() - (startTag.size() + endTag.size()));
 
 			return stringToSearch.substr(start, count);
-		}
-
-		vector<string> vectorization(string str){
-			string state;
-			vector<string> aux;
-			for(int i=0; i<str.size(); i++){
-				if(str[i] == ' '){
-					aux.push_back(state);
-					state.clear();
-				}else{
-					state += str[i];
-				}
-			}
-			aux.push_back(state);
-			state.clear();
-			return aux;
 		}
 
 		void show(){
@@ -376,127 +332,73 @@ class Automata{
 }typedef AFD;
 
 int main(){
-	AFD autobot("AFD.txt");/*
+	// string path = "../automata/";
+	// string file;
+	// cout<<"Digite o nome do arquivo do automato: ";
+	// cin>>file;
+	// path += file;
+	// path += ".txt";
+	// AFD autobot(path);
 
-	//	Teste inserindo estados
-	vector<string> estados;
-	estados.push_back("q0");
-	estados.push_back("q1");
-	estados.push_back("q2");
-	estados.push_back("q3");
-	autobot.setEstados(estados);
-
-	//	Teste inserindo estado inicial
-	autobot.setEstadoInicial(estados.at(0));
-	
-	//	Teste inserindo estados finais
-	vector<string> estadosFinais;
-	estadosFinais.push_back(estados.at(2));
-	estadosFinais.push_back(estados.at(3));
-	autobot.setEstadosFinais(estadosFinais);
-
-	//	Teste inserindo alfabeto
-	vector<string> alfabeto;
-	alfabeto.push_back("a");
-	alfabeto.push_back("b");
-	alfabeto.push_back("c");
-	alfabeto.push_back("d");
-	alfabeto.push_back("e");
-	autobot.setAlfabeto(alfabeto);
-
-	//	Teste inserindo funcao transicao
-	map<string,vector<pair<string,string>>> funcaoTransicao;
-	vector<pair<string,string>> vecPar;
-	vecPar.push_back(pair<string,string>("a","q1"));
-	vecPar.push_back(pair<string,string>("b","q2"));
-	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q0",vecPar));
-	vecPar.clear();
-	vecPar.push_back(pair<string,string>("b","q2"));
-	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q1",vecPar));
-	vecPar.clear();
-	vecPar.push_back(pair<string,string>("c","q3"));
-	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q2",vecPar));
-	vecPar.clear();
-	vecPar.push_back(pair<string,string>("d","q0"));
-	vecPar.push_back(pair<string,string>("e","q1"));
-	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q3",vecPar));
-
-	// autobot.setFuncaoTransicao("q0",pair<string,string>("a","q1"));
-	// autobot.setFuncaoTransicao("q0",pair<string,string>("b","q2"));
-	// autobot.setFuncaoTransicao("q1",pair<string,string>("b","q2"));
-	// autobot.setFuncaoTransicao("q2",pair<string,string>("c","q3"));
-	// autobot.setFuncaoTransicao("q3",pair<string,string>("d","q0"));
-	// autobot.setFuncaoTransicao("q3",pair<string,string>("e","q1"));
-
-	// cout<<"FUNCAO TRANSICAO:\n";
-	// for(auto it : funcaoTransicao){
-	// 	cout<<"\t["<<it.first<<"]\n";
-	// 	for(int i=0; i<it.second.size();i++){
-	// 		cout<<"\t  |---"<<it.second.at(i).first<<"--->["<<it.second.at(i).second<<"]\n";
-	// 	}
-	// }
-	// cout<<"\n";
-
-	//	Relacionado a leitura do arquivo e setter da Função Transição
-	vector<pair<string,string>> myVec;
-	myVec.push_back(pair<string,string>("a","q1"));
-	myVec.push_back(pair<string,string>("b","q0"));
-	autobot.setFuncaoTransicao("q0",myVec);
-	myVec.clear();
-	myVec.push_back(pair<string,string>("c","q1"));
-	autobot.setFuncaoTransicao("q1",myVec);
-	myVec.clear();
-	myVec.push_back(pair<string,string>("a","q2"));
-	myVec.push_back(pair<string,string>("b","q0"));
-	autobot.setFuncaoTransicao("q2",myVec);
-	
-	//	Testando uso de FLAGS
-	string tag = "[TAG]texto inserido entre tags[-TAG]";
-	cout<<"String: "<<tag<<"\n";
-	cout<<"Processado: "<<autobot.extractStringBetweenTags(tag,"[TAG]","[-TAG]")<<"\n";
-	*/
-
+	AFD autobot("../automata/AFD.txt");
 	autobot.show();
 
+	string entrada;
 	vector<string> myVec;
-	myVec.push_back("0");
-	myVec.push_back("1");
-	myVec.push_back("0");
-	myVec.push_back("0");
 
-	cout<<autobot.verificaCadeia(myVec)<<"\n";
+	//	Cleaning cin
+	// cin.clear();
+	// cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	// fflush(stdin);
+
+	while(true){
+		cout<<"Digite uma entrada (separe os simbolos por espacos ou \"sair\"): ";
+		getline(cin, entrada);
+
+		if(entrada == "sair"){
+			break;
+		}
+
+		myVec = vectorization(entrada);
+		
+		if(autobot.verificaCadeia(myVec)){
+			cout<<"Cadeia Aceita!\n\n";
+		}else{
+			cout<<"Cadeia Rejeitada!\n\n";
+		}
+
+		entrada.clear();
+		myVec.clear();
+	}
+
+	cout<<"Saindo...\n\n";
 	return 0;	
 }
 
-// map<string, vector<string>> myMap;
-// vector<string> aux;
-// aux.push_back("outra coisa");
-// aux.push_back("mais outra coisa");
-// aux.push_back("mais outra coisa ainda");
-// myMap.insert(pair<string,vector<string>>("algo",aux));
-// cout<<"MYMAP:\n";
-// for(auto it:myMap){
-// 	cout<<"["<<it.first<<"]: ";
-// 	for(int i=0; i<it.second.size();i++){
-// 		if(i == (it.second.size()-1)){
-// 			cout<<it.second.at(i);
-// 		}else{
-// 			cout<<it.second.at(i)<<", ";
-// 		}
-// 	}
-// }
-// cout<<"\n";
+vector<string> vectorization(string str){
+			string state;
+			vector<string> aux;
+			for(int i=0; i<str.size(); i++){
+				if(str[i] == ' '){
+					aux.push_back(state);
+					state.clear();
+				}else{
+					state += str[i];
+				}
+			}
+			aux.push_back(state);
+			state.clear();
+			return aux;
+}
 
-// vector<pair<string, string>> myVec;
-// myVec.push_back(pair<string,string>("quero","nao"));
-// myVec.push_back(pair<string,string>("quero","nunca"));
-// myVec.push_back(pair<string,string>("quero","nananinanunca"));
-// cout<<"MYVEC:\n";
-// for(int i=0; i<myVec.size(); i++){
-// 	if(i == (myVec.size()-1)){
-// 		cout<<myVec.at(i).first<<"|"<<myVec.at(i).second;
-// 	}else{
-// 		cout<<myVec.at(i).first<<"|"<<myVec.at(i).second<<", ";
-// 	}
-// }
-// cout<<"\n";
+string addSpace(string str){
+	string temp;
+	for(int i=0; i<str.size(); i++){
+		if(str.at(i) == ','){
+			temp += ' ';
+		}else{
+			temp += str.at(i);
+		}
+	}
+	return temp;
+}
