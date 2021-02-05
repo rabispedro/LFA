@@ -2,11 +2,14 @@
 #include<vector>
 #include<map>
 #include<utility>
+#include<fstream>
 
 using namespace std;
 
 class Automata{
 	private:
+		string m_Descricao;
+
 		vector<string> m_Estados;
 
 		string m_EstadoInicial;
@@ -18,6 +21,59 @@ class Automata{
 	public:
 		Automata(string filename){
 			cout<<"File: "<<filename<<"\n";
+			ifstream reader(filename);
+			string lineFromFile;
+			string temp;
+			int count=1;
+
+			while(getline(reader,lineFromFile)){
+				cout<<"["<<count++<<"]:\t"<<lineFromFile<<"\n";
+				if(lineFromFile.find("[DESCRICAO]") != string::npos){
+					//	Descricao
+					temp = extractStringBetweenTags(lineFromFile, "[DESCRICAO]", "[-DESCRICAO]");
+					setDescricao(temp);
+					temp.clear();
+				}else if(lineFromFile.find("[ESTADOS]") != string::npos){
+					//	Estados: PRECISA ARRUMAR
+					temp = extractStringBetweenTags(lineFromFile, "[ESTADOS]", "[-ESTADOS]");
+					string state;
+					vector<string> aux;
+					for(int i=0; i<temp.size(); i++){
+						if(temp[i] == ' ' || temp[i] == '['){
+							aux.push_back(state);
+							state.clear();
+						}else{
+							state += temp[i];
+						}
+					}
+					setEstados(aux);
+					temp.clear();
+				}else if(lineFromFile.find("[ALFABETO]") != string::npos){
+					//	Alfabeto
+
+				}else if(lineFromFile.find("[FUNCAO TRANSICAO]") != string::npos){
+					//	Função Transição
+
+				}else if(lineFromFile.find("[ESTADO INICIAL]") != string::npos){
+					//	Estado Inicial
+					temp = extractStringBetweenTags(lineFromFile, "[ESTADO INICIAL]", "[-ESTADO INICIAL]");
+					setEstadoInicial(temp);
+					temp.clear();
+				}else if(lineFromFile.find("[ESTADOS FINAIS]") != string::npos){
+					//	Estados Finais
+
+				}
+			}
+			cout<<"\n\n";
+		}
+
+
+		void setDescricao(string descricao){
+			m_Descricao = descricao;
+		}
+
+		string getDescricao(){
+			return m_Descricao;
 		}
 
 		void setEstados(vector<string> estados){
@@ -84,7 +140,11 @@ class Automata{
 			m_FuncaoTransicao.clear();
 		}
 
-		bool verificaCadeia(vector<string> entrada);
+		bool verificaCadeia(vector<string> entrada){
+
+			
+			return true;
+		}
 
 		string extractStringBetweenTags(string stringToSearch, string startTag, string endTag){
 			int start = startTag.size();
@@ -94,7 +154,10 @@ class Automata{
 		}
 
 		void show(){
-			cout<<"SHOW\n\n";
+			cout<<"Automato Finito Deterministico (AFD):\n";
+
+			//	Descrição
+			cout<<"Descricao: "<<m_Descricao<<"\n";
 
 			//	Estados
 			cout<<"Estados: ";
@@ -130,10 +193,9 @@ class Automata{
 				cout<<"\t["<<it.first<<"]\n";
 				for(int i=0; i<it.second.size();i++){
 					cout<<"\t  |---"<<it.second.at(i).first<<"--->["<<it.second.at(i).second<<"]\n";
-		}
-	}
-	cout<<"\n";
-
+				}
+			}
+			cout<<"\n\n";
 		}
 }typedef AFD;
 
@@ -158,7 +220,7 @@ class Automata{
 */
 
 int main(){
-	AFD autobot("afd.txt");
+	AFD autobot("AFD.txt");/*
 
 	//	Teste inserindo estados
 	vector<string> estados;
@@ -232,8 +294,14 @@ int main(){
 	myVec.push_back(pair<string,string>("b","q0"));
 	autobot.setFuncaoTransicao("q2",myVec);
 	
+	//	Testando uso de FLAGS
+	string tag = "[TAG]texto inserido entre tags[-TAG]";
+	cout<<"String: "<<tag<<"\n";
+	cout<<"Processado: "<<autobot.extractStringBetweenTags(tag,"[TAG]","[-TAG]")<<"\n";
+	*/
 
 	autobot.show();
+
 	return 0;	
 }
 

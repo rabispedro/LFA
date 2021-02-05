@@ -1,0 +1,11 @@
+[DESCRICAO]Automato Finito Deterministico que reconhece numeros binarios pares (terminados em 0).[-DESCRICAO]
+[ESTADOS]q0 q1[-ESTADOS]
+[ALFABETO]0 1[-ALFABETO]
+[FUNCAO TRANSICAO]
+q0 0 q1
+q0 1 q0
+q1 0 q1
+q1 1 q0
+[-FUNCAO TRANSICAO]
+[ESTADO INICIAL]q0[-ESTADO INICIAL]
+[ESTADOS FINAIS]q1[-ESTADOS FINAIS]
