@@ -36,21 +36,13 @@ class Automata{
 				}else if(lineFromFile.find("[ESTADOS]") != string::npos){
 					//	Estados: PRECISA ARRUMAR
 					temp = extractStringBetweenTags(lineFromFile, "[ESTADOS]", "[-ESTADOS]");
-					string state;
-					vector<string> aux;
-					for(int i=0; i<temp.size(); i++){
-						if(temp[i] == ' ' || temp[i] == '['){
-							aux.push_back(state);
-							state.clear();
-						}else{
-							state += temp[i];
-						}
-					}
-					setEstados(aux);
+					setEstados(vectorization(temp));
 					temp.clear();
 				}else if(lineFromFile.find("[ALFABETO]") != string::npos){
 					//	Alfabeto
-
+					temp = extractStringBetweenTags(lineFromFile, "[ALFABETO]", "[-ALFABETO]");
+					setAlfabeto(vectorization(temp));
+					temp.clear();
 				}else if(lineFromFile.find("[FUNCAO TRANSICAO]") != string::npos){
 					//	Função Transição
 
@@ -61,7 +53,9 @@ class Automata{
 					temp.clear();
 				}else if(lineFromFile.find("[ESTADOS FINAIS]") != string::npos){
 					//	Estados Finais
-
+					temp = extractStringBetweenTags(lineFromFile, "[ESTADOS FINAIS]", "[-ESTADOS FINAIS]");
+					setEstadosFinais(vectorization(temp));
+					temp.clear();
 				}
 			}
 			cout<<"\n\n";
@@ -151,6 +145,22 @@ class Automata{
 			int count = (stringToSearch.size() - (startTag.size() + endTag.size()));
 
 			return stringToSearch.substr(start, count);
+		}
+
+		vector<string> vectorization(string str){
+			string state;
+			vector<string> aux;
+			for(int i=0; i<str.size(); i++){
+				if(str[i] == ' '){
+					aux.push_back(state);
+					state.clear();
+				}else{
+					state += str[i];
+				}
+			}
+			aux.push_back(state);
+			state.clear();
+			return aux;
 		}
 
 		void show(){
