@@ -84,7 +84,7 @@ class Automata{
 			m_FuncaoTransicao.clear();
 		}
 
-		bool verificaCadeia(string entrada);
+		bool verificaCadeia(vector<string> entrada);
 
 		string extractStringBetweenTags(string stringToSearch, string startTag, string endTag){
 			int start = startTag.size();
