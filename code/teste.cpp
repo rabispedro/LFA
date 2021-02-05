@@ -1,10 +1,9 @@
 #include<iostream>
 #include<vector>
+#include<map>
 #include<utility>
 
 using namespace std;
-
-void clearScreen();
 
 class Automata{
 	private:
@@ -15,7 +14,7 @@ class Automata{
 
 		vector<string> m_Alfabeto;
 
-		vector<pair<string,string>> m_FuncaoTransicao;
+		map<string,vector<pair<string,string>>> m_FuncaoTransicao;
 	public:
 		Automata(string filename){
 			cout<<"File: "<<filename<<"\n";
@@ -63,21 +62,36 @@ class Automata{
 			return m_Alfabeto;
 		}
 
-		void setFuncaoTransicao(vector<pair<string,string>> funcaoTransicao){
-			m_FuncaoTransicao.clear();
-			for(int i=0; i<funcaoTransicao.size(); i++){
-				m_FuncaoTransicao.push_back(pair<string,string>(funcaoTransicao.at(i).first,funcaoTransicao.at(i).second));
-			}
+		// map<string,vector<pair<string,string>>> m_FuncaoTransicao;
+		void setFuncaoTransicao(string estadoAtual, vector<pair<string,string>> vecAtual){
+			m_FuncaoTransicao.insert(pair<string,vector<pair<string,string>>>(estadoAtual,vecAtual));
 		}
 
-		vector<pair<string,string>> getFuncaoTransicao(){
+		map<string,vector<pair<string,string>>> getFuncaoTransicao(){
 			return m_FuncaoTransicao;
 		}
 
+		void addVec(string estadoAtual, pair<string,string>parAtual, vector<pair<string,string>>* vecAtual){
+			// vector<pair<string,string>> vecPar;
+			// vecPar.push_back(pair<string,string>("a","q1"));
+			// vecPar.push_back(pair<string,string>("b","q2"));
+			// funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q0",vecPar));
+			// vecPar.clear();
+			vecAtual->push_back(parAtual);
+		}
+
+		void resetFuncaoTransicao(){
+			m_FuncaoTransicao.clear();
+		}
 
 		bool verificaCadeia(string entrada);
 
-		string extractStringBetweenTags(string stringToSearch, string startTag, string endTag);
+		string extractStringBetweenTags(string stringToSearch, string startTag, string endTag){
+			int start = startTag.size();
+			int count = (stringToSearch.size() - (startTag.size() + endTag.size()));
+
+			return stringToSearch.substr(start, count);
+		}
 
 		void show(){
 			cout<<"SHOW\n\n";
@@ -112,7 +126,13 @@ class Automata{
 
 			//	Função Transição
 			cout<<"Funcao Transicao:\n";
-
+			for(auto it : m_FuncaoTransicao){
+				cout<<"\t["<<it.first<<"]\n";
+				for(int i=0; i<it.second.size();i++){
+					cout<<"\t  |---"<<it.second.at(i).first<<"--->["<<it.second.at(i).second<<"]\n";
+		}
+	}
+	cout<<"\n";
 
 		}
 }typedef AFD;
@@ -127,14 +147,14 @@ class Automata{
 *	
 */
 
-/* INTERPRETAÇÃO (pertence ao alfabeto)
-{"a", "b", "c"}
-{"ALFA", "BETA", "GAMA"}
-
-"abc" -> ERRADO
-"a b c" -> CERTO
-"ALFABETAGAMA" -> ERRADO
-"ALFA BETA GAMA" -> CERTO
+/*	INTERPRETAÇÃO (pertence ao alfabeto)
+*	{"a", "b", "c"}
+*	{"ALFA", "BETA", "GAMA"}
+*	
+*	"abc" -> ERRADO
+*	"a b c" -> CERTO
+*	"ALFABETAGAMA" -> ERRADO
+*	"ALFA BETA GAMA" -> CERTO
 */
 
 int main(){
@@ -167,24 +187,132 @@ int main(){
 	autobot.setAlfabeto(alfabeto);
 
 	//	Teste inserindo funcao transicao
-	vector<pair<string,string>> funcaoTransicao;
-	funcaoTransicao.push_back(pair<string,string>("a","q1"));
-	funcaoTransicao.push_back(pair<string,string>("b","q2"));
-	funcaoTransicao.push_back(pair<string,string>("b","q2"));
-	funcaoTransicao.push_back(pair<string,string>("c","q3"));
-	funcaoTransicao.push_back(pair<string,string>("d","q0"));
-	funcaoTransicao.push_back(pair<string,string>("e","q1"));
-	autobot.setFuncaoTransicao(funcaoTransicao);
+	map<string,vector<pair<string,string>>> funcaoTransicao;
+	vector<pair<string,string>> vecPar;
+	vecPar.push_back(pair<string,string>("a","q1"));
+	vecPar.push_back(pair<string,string>("b","q2"));
+	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q0",vecPar));
+	vecPar.clear();
+	vecPar.push_back(pair<string,string>("b","q2"));
+	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q1",vecPar));
+	vecPar.clear();
+	vecPar.push_back(pair<string,string>("c","q3"));
+	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q2",vecPar));
+	vecPar.clear();
+	vecPar.push_back(pair<string,string>("d","q0"));
+	vecPar.push_back(pair<string,string>("e","q1"));
+	funcaoTransicao.insert(pair<string,vector<pair<string,string>>>("q3",vecPar));
 
-	cout<<"FUNCAO TRANSICAO:\n";
-	for(int i=0; i<funcaoTransicao.size(); i++){
-		cout<<"FuncaoTransicao["<<i<<"]: ["<<funcaoTransicao.at(i).first<<"|"<<funcaoTransicao.at(i).second<<"]\n";
-	}
+	// autobot.setFuncaoTransicao("q0",pair<string,string>("a","q1"));
+	// autobot.setFuncaoTransicao("q0",pair<string,string>("b","q2"));
+	// autobot.setFuncaoTransicao("q1",pair<string,string>("b","q2"));
+	// autobot.setFuncaoTransicao("q2",pair<string,string>("c","q3"));
+	// autobot.setFuncaoTransicao("q3",pair<string,string>("d","q0"));
+	// autobot.setFuncaoTransicao("q3",pair<string,string>("e","q1"));
+
+	// cout<<"FUNCAO TRANSICAO:\n";
+	// for(auto it : funcaoTransicao){
+	// 	cout<<"\t["<<it.first<<"]\n";
+	// 	for(int i=0; i<it.second.size();i++){
+	// 		cout<<"\t  |---"<<it.second.at(i).first<<"--->["<<it.second.at(i).second<<"]\n";
+	// 	}
+	// }
+	// cout<<"\n";
+
+	//	Relacionado a leitura do arquivo e setter da Função Transição
+	vector<pair<string,string>> myVec;
+	myVec.push_back(pair<string,string>("a","q1"));
+	myVec.push_back(pair<string,string>("b","q0"));
+	autobot.setFuncaoTransicao("q0",myVec);
+	myVec.clear();
+	myVec.push_back(pair<string,string>("c","q1"));
+	autobot.setFuncaoTransicao("q1",myVec);
+	myVec.clear();
+	myVec.push_back(pair<string,string>("a","q2"));
+	myVec.push_back(pair<string,string>("b","q0"));
+	autobot.setFuncaoTransicao("q2",myVec);
+	
 
 	autobot.show();
 	return 0;	
 }
 
-void clearScreen(){
-	cout<<"";
-}
+/*	LEITURA DO ARQUIVO
+*	Uso de TAGS: [TAG]...[-TAG]
+*	Chamada de setters.
+*	
+*	Função de Transição:
+*	q0 a q1
+*	q0 b q2
+*	q1 b q2
+*	q2 c q3
+*	q3 d q0
+*	q3 e q1
+*	
+*		Guardar o estado atual e o ultimo estado;
+*		Preencher o vector do estado atual;
+*		Ao chegar a um estado atual diferente do ultimo estado, setFuncaoTransicao(string, vector)
+*	
+*/
+
+/*	DEMONSTRAÇÃO DA ESTRUTURA: FUNÇÕES DE TRANSIÇÃO
+*	MAP <first, second>
+*	VECTOR[index] = value
+*	PAIR <first, second>
+*	
+*	[q0]
+*		|---"a"--->[q1]
+*		|---"b"--->[q2]
+*	[q1]
+*		|---"b"--->[q2]
+*	[q2]
+*		|---"c"--->[q3]
+*	[q3]
+*		|---"d"--->[q0]
+*		|---"e"--->[q1]
+*	
+*	map<string, vector<pair<string, string>>>
+*	------------------------------------------
+*	q0 => ("a"|"q1") -> ("b"|"q2")
+*	------------------------------------------
+*	q0 -> index[0] = ("a"|"q1")
+*	q0 -> index[1] = ("b"|"q2") 
+*	------------------------------------------
+*	q0 -> index[0].first = "a"
+*	q0 -> index[0].second = "q1"
+*	q0 -> index[1].first = "b"
+*	q0 -> index[2].second = "q2"
+*/
+
+// map<string, vector<string>> myMap;
+// vector<string> aux;
+// aux.push_back("outra coisa");
+// aux.push_back("mais outra coisa");
+// aux.push_back("mais outra coisa ainda");
+// myMap.insert(pair<string,vector<string>>("algo",aux));
+// cout<<"MYMAP:\n";
+// for(auto it:myMap){
+// 	cout<<"["<<it.first<<"]: ";
+// 	for(int i=0; i<it.second.size();i++){
+// 		if(i == (it.second.size()-1)){
+// 			cout<<it.second.at(i);
+// 		}else{
+// 			cout<<it.second.at(i)<<", ";
+// 		}
+// 	}
+// }
+// cout<<"\n";
+
+// vector<pair<string, string>> myVec;
+// myVec.push_back(pair<string,string>("quero","nao"));
+// myVec.push_back(pair<string,string>("quero","nunca"));
+// myVec.push_back(pair<string,string>("quero","nananinanunca"));
+// cout<<"MYVEC:\n";
+// for(int i=0; i<myVec.size(); i++){
+// 	if(i == (myVec.size()-1)){
+// 		cout<<myVec.at(i).first<<"|"<<myVec.at(i).second;
+// 	}else{
+// 		cout<<myVec.at(i).first<<"|"<<myVec.at(i).second<<", ";
+// 	}
+// }
+// cout<<"\n";
