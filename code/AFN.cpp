@@ -329,7 +329,7 @@ class Automata{
 			}
 			cout<<"\n\n";
 		}
-}typedef AFD;
+}typedef AFN;
 
 int main(){
 	// string path = "../automata/";
@@ -338,9 +338,9 @@ int main(){
 	// cin>>file;
 	// path += file;
 	// path += ".txt";
-	// AFD autobot(path);
+	// AFN autobot(path);
 
-	AFD autobot("../automata/AFD.txt");
+	AFN autobot("../automata/AFN.txt");
 	autobot.show();
 
 	string entrada;
