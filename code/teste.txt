@@ -1,0 +1,10 @@
+Verifica Estados
+	-> Recursivo
+	-> Gera lista de estados finais
+	-> Para com a lista vazia
+
+
+1) Achei o estado atual
+2) Achei a entrada atual
+3) Tenho uma lista de Próximos Estados
+4) Faço uma chamada para cada Próximo Estado

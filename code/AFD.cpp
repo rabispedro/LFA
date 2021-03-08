@@ -245,7 +245,6 @@ class Automata{
 					cout<<"Erro: entrada nao percente ao Alfabeto do Automato.\n\n";
 					return false;
 				}
-				flag = false;
 			}
 
 			string estadoAtual = getEstadoInicial();
