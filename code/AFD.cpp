@@ -5,7 +5,10 @@
 #include<fstream>
 #include<string>
 #include<limits>
+<<<<<<< HEAD
 #include<iomanip>
+=======
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8
 
 using namespace std;
 
@@ -102,7 +105,11 @@ class Automata{
 			string estadoAnterior;
 
 			while(getline(reader,lineFromFile)){
+<<<<<<< HEAD
 				cout<<setw(2)<<count++<<"|  "<<lineFromFile<<"\n";
+=======
+				cout<<count++<<"|  "<<lineFromFile<<"\n";
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8
 				if(lineFromFile.find("[DESCRICAO]") != string::npos){
 					//	Descricao
 					temp = extractStringBetweenTags(lineFromFile, "[DESCRICAO]", "[-DESCRICAO]");
@@ -124,7 +131,10 @@ class Automata{
 					//	Primeira linha da Função Transição
 					getline(reader,lineFromFile);
 					while(!(lineFromFile.find("[-FUNCAO TRANSICAO]") != string::npos)){
+<<<<<<< HEAD
 						cout<<setw(2)<<count++<<"|  "<<lineFromFile<<"\n";
+=======
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8
 						vecStr = vectorization(lineFromFile);
 
 							// Primeiro até penúltimo Estado Inicial diferente
@@ -151,7 +161,11 @@ class Automata{
 							vecPair.clear();
 						}
 					}
+<<<<<<< HEAD
 					cout<<setw(2)<<count++<<"|  "<<lineFromFile<<"\n";
+=======
+
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8
 				}else if(lineFromFile.find("[ESTADO INICIAL]") != string::npos){
 					//	Estado Inicial
 					temp = extractStringBetweenTags(lineFromFile, "[ESTADO INICIAL]", "[-ESTADO INICIAL]");
@@ -245,6 +259,10 @@ class Automata{
 					cout<<"Erro: entrada nao percente ao Alfabeto do Automato.\n\n";
 					return false;
 				}
+<<<<<<< HEAD
+=======
+				flag = false;
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8
 			}
 
 			string estadoAtual = getEstadoInicial();
@@ -374,6 +392,7 @@ int main(){
 
 	cout<<"Saindo...\n\n";
 	return 0;	
+<<<<<<< HEAD
 }
 
 vector<string> vectorization(string str){
@@ -392,6 +411,26 @@ vector<string> vectorization(string str){
 			return aux;
 }
 
+=======
+}
+
+vector<string> vectorization(string str){
+			string state;
+			vector<string> aux;
+			for(int i=0; i<str.size(); i++){
+				if(str[i] == ' '){
+					aux.push_back(state);
+					state.clear();
+				}else{
+					state += str[i];
+				}
+			}
+			aux.push_back(state);
+			state.clear();
+			return aux;
+}
+
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8
 string addSpace(string str){
 	string temp;
 	for(int i=0; i<str.size(); i++){
@@ -402,4 +441,8 @@ string addSpace(string str){
 		}
 	}
 	return temp;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5b8d04abb95cd9aefddf4bdd70e88d5755c116b8

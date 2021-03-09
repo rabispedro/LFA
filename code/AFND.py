@@ -99,14 +99,12 @@ class AFND:
 			print(self._funcao_transicao[i][2])
 			i += 1
 		print()
+		print("="*128,"\n")
 
 		return
 
 def verifica_alfabeto(automato: AFND, entrada: list) -> bool:
 	flag: bool = False
-	print("Verificando alfabeto:")
-	print("Alfabeto:",automato.get_alfabeto())
-	print("Entrada:",entrada)
 
 	for i in entrada:
 		flag = False
@@ -117,39 +115,27 @@ def verifica_alfabeto(automato: AFND, entrada: list) -> bool:
 			return flag
 	return flag
 
-def verifica_estados(automato: AFND, entrada: list, estado_atual: str, estados_finais: list) -> list:
+def verifica_estados(automato: AFND, entrada: list, estado_atual: str, estados_finais: list) -> None:
 	if(entrada == []):
 		estados_finais.append(estado_atual)
-		print("Fim:",estados_finais)
-		return estados_finais
+		return
 	
 	entrada_atual: str = entrada[0]
 	delta: list = automato.get_funcao_transicao()
-
-	print("Entrada:",entrada)
-	print("Nova entrada:",entrada[1:])
-
 	i: int = 0
 	while (i < len(delta)):
 		if((estado_atual == delta[i][0]) and (entrada_atual == delta[i][1])):
 			#	Estado encontrado e entrada encontrada
-			print("Estado atual:",estado_atual)
-			print("Entrada atual: ",entrada_atual)
-			print("Próximo(s) estado(s):",delta[i][2])
+			print("[",estado_atual,"]",end="")
+			print("----[",entrada_atual,"]---->",delta[i][2])
 			j: int = 0
 			while( j < len(delta[i][2])):
-				# estados_finais.append(delta[i][2][j])
-				print("<---",(verifica_estados(automato, entrada[1:],delta[i][2][j], estados_finais)))
-				# estados_finais.append(verifica_estados(automato, entrada[1:],delta[i][2][j], estados_finais))
+				verifica_estados(automato, entrada[1:], delta[i][2][j],estados_finais)
 				j += 1
 		i += 1
 
-	return estados_finais
-	
-
 def verifica_cadeia(automato: AFND, entrada: str) -> bool:
 	entrada_processada: list = entrada.split(" ")
-	print("Entrada processada:",entrada_processada)
 
 	#	Verifica Alfabeto
 	if(not verifica_alfabeto(automato, entrada_processada)):
@@ -158,10 +144,8 @@ def verifica_cadeia(automato: AFND, entrada: str) -> bool:
 			
 	#	Percorre Estados
 	flag: bool = False
-	estados_finais: list = verifica_estados(automato, entrada_processada, automato.get_estado_inicial(), [])
-
-	print("Estados Finais:",estados_finais)
-	print("Estados Finais Automato:",automato.get_estados_finais())
+	estados_finais: list = []
+	verifica_estados(automato, entrada_processada, automato.get_estado_inicial(), estados_finais)
 
 	#	Verifica Estados Finais
 	for i in estados_finais:
@@ -170,7 +154,7 @@ def verifica_cadeia(automato: AFND, entrada: str) -> bool:
 			if (i == j):
 				flag = True
 				return flag
-		return flag
+	return flag
 
 def menu() -> None:
 	automato: AFND = AFND()
@@ -187,19 +171,34 @@ def menu() -> None:
 		["q2", "0", ["q3"]],
 		["q2", "1", ["q1"]],
 		["q3", "0", ["q2"]],
-		["q3", "0", ["q0"]]
+		["q3", "1", ["q0"]]
 	])
 	automato.show()
+
+	autobot: AFND = AFND()
+	autobot.set_descricao("Automato que reconhece numeros binarios pares (terminados em 0).")
+	autobot.set_alfabeto(["0", "1"])
+	autobot.set_estados(["q0", "q1"])
+	autobot.set_estado_inicial("q0")
+	autobot.set_estados_finais(["q1"])
+	autobot.set_funcao_transicao([
+		["q0", "0", ["q1"]],
+		["q0", "1", ["q0"]],
+		["q1", "0", ["q1"]],
+		["q1", "1", ["q0"]]
+	])
+	autobot.show()
 
 	while (True):
 		entrada: str = input("Digite uma entrada (separe os simbolos por espaços ou digite \"sair\"): ")
 		if (entrada == "sair"):
 			break
 
-		if(verifica_cadeia(automato, entrada)):
+		if(verifica_cadeia(autobot, entrada)):
 			print("CADEIA ACEITA!!!\n")
 		else:
 			print("CADEIA REJEITADA!!!\n")
+		print("="*128)
 	
 	print("Saindo :(\n")
 	return
