@@ -120,10 +120,11 @@ def verifica_alfabeto(automato: AFD, entrada: list) -> bool:
 			return flag
 	return flag
 
-# def  estado_morto(automato: AFD, )
-
 # recursiva
 def verifica_estados(automato: AFD, entrada: list, estado_atual: str, estados_finais: list) -> None:
+	#if(tem_estado_morto(automato)):
+
+
 	if(entrada == []):
 		estados_finais.append(estado_atual)
 		return
@@ -166,6 +167,7 @@ def verifica_cadeia(automato: AFD, entrada: str) -> bool:
 	
 	return flag
 
+
 def tem_multiplos_estados(automato: AFD) -> bool:
 	delta: list = automato.get_funcao_transicao()
 	flag: bool  = False
@@ -175,41 +177,92 @@ def tem_multiplos_estados(automato: AFD) -> bool:
 			flag = True
 	return flag
 
+# retorna lista com os estados que podem ter estados mortos
+def tem_estado_morto(automato: AFD) -> list:
+	delta: list = automato.get_funcao_transicao()
+	tamanhoAlfabeto: int = len(automato.get_alfabeto())
+	estado_atual: str = ''
+	estados_atuais: list = []
+	estados_com_estado_morto: list = []
+
+	for i in range(0, len(delta)):
+		estado_atual = delta[i][0]
+		estados_atuais.append(estado_atual)
+
+	for elemento in estados_atuais:
+		if(estados_atuais.count(elemento) < tamanhoAlfabeto):
+			estados_com_estado_morto.append(elemento)
+
+	return estados_com_estado_morto
 
 def menu() -> None:
-	automato: AFD = AFD()
-	automato.set_descricao("Automato que reconhece números pares de 0's e 1's")
-	automato.set_alfabeto(["0", "1"])
-	automato.set_estados(["q0", "q1", "q2", "q3"])
-	automato.set_estado_inicial("q0")
-	automato.set_estados_finais(["q0"])
-	automato.set_funcao_transicao([
-		["q0", "0", ["q1"]],
-		["q0", "1", ["q3"]],
-		["q1", "0", ["q0"]],
-		["q1", "1", ["q2"]],
-		["q2", "0", ["q3"]],
-		["q2", "1", ["q1"]],
-		["q3", "0", ["q2"]],
-		["q3", "1", ["q0"]]
-	])
-	automato.show()	
+	# automato: AFD = AFD()
+	# automato.set_descricao("Automato que reconhece números pares de 0's e 1's")
+	# automato.set_alfabeto(["0", "1"])
+	# automato.set_estados(["q0", "q1", "q2", "q3"])
+	# automato.set_estado_inicial("q0")
+	# automato.set_estados_finais(["q0"])
+	# automato.set_funcao_transicao([
+	# 	["q0", "0", ["q1"]],
+	# 	["q0", "1", ["q3"]],
+	# 	["q1", "0", ["q0"]],
+	# 	["q1", "1", ["q2"]],
+	# 	["q2", "0", ["q3"]],
+	# 	["q2", "1", ["q1"]],
+	# 	["q3", "0", ["q2"]],
+	# 	["q3", "1", ["q0"]]
+	# ])
+	# automato.show()	
+
+	# autobot: AFD = AFD()
+	# autobot.set_descricao("Automato que reconhece cadeias que começam em 0")
+	# autobot.set_alfabeto(["0", "1"])
+	# autobot.set_estados(["q0", "q1", "q2"])
+	# autobot.set_estado_inicial("q0")
+	# autobot.set_estados_finais(["q1"])
+	# autobot.set_funcao_transicao([
+	# 	["q0", "0", ["q1"]],
+	# 	["q0", "1", ["q2"]],
+	# 	["q1", "0", ["q1"]],
+	# 	["q1", "1", ["q1"]],
+	# 	["q2", "0", ["q2"]],
+	# 	["q2", "1", ["q2"]]
+	# ])
+	# autobot.show()
+
+	# autobot: AFD = AFD()
+	# autobot.set_descricao("Automato que reconhece cadeias que começam em 0 e terminam em 1")
+	# autobot.set_alfabeto(["0", "1"])
+	# autobot.set_estados(["q0", "q1", "q2"])
+	# autobot.set_estado_inicial("q0")
+	# autobot.set_estados_finais(["q2"])
+	# autobot.set_funcao_transicao([
+	# 	["q0", "1", ["q1"]],
+	# 	["q0", "0", ["q0"]],
+	# 	["q1", "1", ["q1"]],
+	# 	["q1", "0", ["q2"]],
+	# 	["q2", "0", ["q2"]],
+	# 	["q2", "1", ["q1"]]
+	# ])
+	# autobot.show()
 
 	autobot: AFD = AFD()
-	autobot.set_descricao("Automato que reconhece cadeias que começam em 0")
+	autobot.set_descricao("Automato que reconhece cadeias que possuem tres 0's consecutivos")
 	autobot.set_alfabeto(["0", "1"])
-	autobot.set_estados(["q0", "q1", "q2"])
+	autobot.set_estados(["q0", "q1", "q2", "q3"])
 	autobot.set_estado_inicial("q0")
-	autobot.set_estados_finais(["q1"])
+	autobot.set_estados_finais(["q3"])
 	autobot.set_funcao_transicao([
+		["q0", "1", ["q0"]],
 		["q0", "0", ["q1"]],
-		["q0", "1", ["q2"]],
-		["q1", "0", ["q1"]],
-		["q1", "1", ["q1"]],
-		["q2", "0", ["q2"]],
-		["q2", "1", ["q2"]]
+		["q1", "0", ["q2"]],
+		["q2", "0", ["q3"]],
+		["q3", "0", ["q3"]],
+		["q3", "1", ["q3"]]
 	])
 	autobot.show()
+
+	tem_estado_morto(autobot)
 
 	while (True):
 		entrada: str = input("Digite uma entrada (separe os simbolos por espaços ou digite \"sair\"): ")
