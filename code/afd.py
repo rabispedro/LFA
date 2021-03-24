@@ -102,12 +102,8 @@ class AFD:
 
 		return
 
-# # Verifica se as entradas fazem parte do alfabeto
+# Verifica se as entradas fazem parte do alfabeto
 def verifica_alfabeto(automato: AFD, entrada: list) -> bool:
-	# '''
-	# 	param 1: AFD
-	# 	param 2: Entradas(cadeia) 
-	# '''
 
 	flag: bool = False
 
@@ -120,18 +116,25 @@ def verifica_alfabeto(automato: AFD, entrada: list) -> bool:
 			return flag
 	return flag
 
-# recursiva
-def verifica_estados(automato: AFD, entrada: list, estado_atual: str, estados_finais: list) -> None:
-	#if(tem_estado_morto(automato)):
 
+def verifica_estados(automato: AFD, entrada: list, estado_atual: str, estados_finais: list) -> None:
+
+	delta: list = automato.get_funcao_transicao()
+
+	if(eh_estado_morto(estado_atual,automato)):
+		proximo_estado: list = [estado_atual]
+		for entrada_atual in entrada:
+			print("[",estado_atual,"]",end="")	
+			print("----[",entrada_atual,"]---->",proximo_estado)		
+		estados_finais = []
+		return
+	
 
 	if(entrada == []):
 		estados_finais.append(estado_atual)
 		return
 
 	entrada_atual: str = entrada[0]
-
-	delta: list = automato.get_funcao_transicao()
 
 	i: int = 0
 	while (i < len(delta)):
@@ -148,7 +151,7 @@ def verifica_estados(automato: AFD, entrada: list, estado_atual: str, estados_fi
 
 
 def verifica_cadeia(automato: AFD, entrada: str) -> bool:
-
+	
 	entrada_processada: list = entrada.split(" ")
 
 	#	Verifica Alfabeto
@@ -169,6 +172,7 @@ def verifica_cadeia(automato: AFD, entrada: str) -> bool:
 
 
 def tem_multiplos_estados(automato: AFD) -> bool:
+
 	delta: list = automato.get_funcao_transicao()
 	flag: bool  = False
 	for transicoes in delta:
@@ -177,23 +181,27 @@ def tem_multiplos_estados(automato: AFD) -> bool:
 			flag = True
 	return flag
 
-# retorna lista com os estados que podem ter estados mortos
-def tem_estado_morto(automato: AFD) -> list:
+def eh_estado_morto(estado: str, automato: AFD) -> bool:
+	
+	tamanho_alfabeto: int = len(automato.get_alfabeto())
+	estados_com_autoinputs: list = tem_autoinput(automato)
+	eh_morto: bool = False
+
+	if(estados_com_autoinputs.count(estado) == tamanho_alfabeto) and (estado not in automato.get_estados_finais()):
+		eh_morto = True
+
+	return eh_morto
+		
+
+def tem_autoinput(automato: AFD) -> list:
+	estados: list = automato.get_estados()
 	delta: list = automato.get_funcao_transicao()
-	tamanhoAlfabeto: int = len(automato.get_alfabeto())
-	estado_atual: str = ''
-	estados_atuais: list = []
-	estados_com_estado_morto: list = []
+	estados_com_autoinputs: list = []
 
-	for i in range(0, len(delta)):
-		estado_atual = delta[i][0]
-		estados_atuais.append(estado_atual)
-
-	for elemento in estados_atuais:
-		if(estados_atuais.count(elemento) < tamanhoAlfabeto):
-			estados_com_estado_morto.append(elemento)
-
-	return estados_com_estado_morto
+	for transicoes in delta:
+		if(transicoes[0] == transicoes[2][0]):
+			estados_com_autoinputs.append(transicoes[0])
+	return estados_com_autoinputs
 
 def menu() -> None:
 	# automato: AFD = AFD()
@@ -214,29 +222,29 @@ def menu() -> None:
 	# ])
 	# automato.show()	
 
-	# autobot: AFD = AFD()
-	# autobot.set_descricao("Automato que reconhece cadeias que começam em 0")
-	# autobot.set_alfabeto(["0", "1"])
-	# autobot.set_estados(["q0", "q1", "q2"])
-	# autobot.set_estado_inicial("q0")
-	# autobot.set_estados_finais(["q1"])
-	# autobot.set_funcao_transicao([
-	# 	["q0", "0", ["q1"]],
-	# 	["q0", "1", ["q2"]],
-	# 	["q1", "0", ["q1"]],
-	# 	["q1", "1", ["q1"]],
-	# 	["q2", "0", ["q2"]],
-	# 	["q2", "1", ["q2"]]
-	# ])
-	# autobot.show()
+	autobot1: AFD = AFD()
+	autobot1.set_descricao("Automato que reconhece cadeias que começam em 0")
+	autobot1.set_alfabeto(["0", "1"])
+	autobot1.set_estados(["q0", "q1", "q2"])
+	autobot1.set_estado_inicial("q0")
+	autobot1.set_estados_finais(["q1"])
+	autobot1.set_funcao_transicao([
+		["q0", "0", ["q1"]],
+		["q0", "1", ["q2"]],
+		["q1", "0", ["q1"]],
+		["q1", "1", ["q1"]],
+		["q2", "0", ["q2"]],
+		["q2", "1", ["q2"]]
+	])
+	autobot1.show()
 
-	# autobot: AFD = AFD()
-	# autobot.set_descricao("Automato que reconhece cadeias que começam em 0 e terminam em 1")
-	# autobot.set_alfabeto(["0", "1"])
-	# autobot.set_estados(["q0", "q1", "q2"])
-	# autobot.set_estado_inicial("q0")
-	# autobot.set_estados_finais(["q2"])
-	# autobot.set_funcao_transicao([
+	# autobot2: AFD = AFD()
+	# autobot2.set_descricao("Automato que reconhece cadeias que começam em 0 e terminam em 1")
+	# autobot2.set_alfabeto(["0", "1"])
+	# autobot2.set_estados(["q0", "q1", "q2"])
+	# autobot2.set_estado_inicial("q0")
+	# autobot2.set_estados_finais(["q2"])
+	# autobot2.set_funcao_transicao([
 	# 	["q0", "1", ["q1"]],
 	# 	["q0", "0", ["q0"]],
 	# 	["q1", "1", ["q1"]],
@@ -244,35 +252,34 @@ def menu() -> None:
 	# 	["q2", "0", ["q2"]],
 	# 	["q2", "1", ["q1"]]
 	# ])
-	# autobot.show()
+	# autobot2.show()
 
-	autobot: AFD = AFD()
-	autobot.set_descricao("Automato que reconhece cadeias que possuem tres 0's consecutivos")
-	autobot.set_alfabeto(["0", "1"])
-	autobot.set_estados(["q0", "q1", "q2", "q3"])
-	autobot.set_estado_inicial("q0")
-	autobot.set_estados_finais(["q3"])
-	autobot.set_funcao_transicao([
+	autobot3: AFD = AFD()
+	autobot3.set_descricao("Automato que reconhece cadeias que possuem tres 0's consecutivos")
+	autobot3.set_alfabeto(["0", "1"])
+	autobot3.set_estados(["q0", "q1", "q2", "q3"])
+	autobot3.set_estado_inicial("q0")
+	autobot3.set_estados_finais(["q3"])
+	autobot3.set_funcao_transicao([
 		["q0", "1", ["q0"]],
 		["q0", "0", ["q1"]],
 		["q1", "0", ["q2"]],
 		["q2", "0", ["q3"]],
-		["q3", "0", ["q3"]],
+		["q3", "0", ["q1"]],
 		["q3", "1", ["q3"]]
 	])
-	autobot.show()
+	# autobot3.show()
 
-	tem_estado_morto(autobot)
 
 	while (True):
 		entrada: str = input("Digite uma entrada (separe os simbolos por espaços ou digite \"sair\"): ")
 		if (entrada.lower() == "sair"):
 			break
 		
-		if(tem_multiplos_estados(autobot)):
+		if(tem_multiplos_estados(autobot1)):
 			print("AFD NAO POSSUI MULTIPLOS PROXIMOS ESTADOS\n")
 		else:
-			if(verifica_cadeia(autobot, entrada)):
+			if(verifica_cadeia(autobot1, entrada)):
 				print("CADEIA ACEITA!!!\n")
 			else:
 				print("CADEIA REJEITADA!!!\n")		
