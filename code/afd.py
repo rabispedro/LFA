@@ -166,9 +166,13 @@ def verifica_cadeia(automato: AFD, entrada: str) -> bool:
 	estados_finais: list = []
 	verifica_estados(automato, entrada_processada, automato.get_estado_inicial(), estados_finais)
 
-	#	Verifica Estados Finais
-	if(estados_finais[0] in automato.get_estados_finais()):
-	 	flag = True
+	#	Verifica Estados Finais	
+	for i in estados_finais:
+		flag = False
+		for j in automato.get_estados_finais():
+			if (i == j):
+				flag = True
+				return flag
 	return flag
 
 def eh_estado_morto(estado: str, automato: AFD) -> bool:
@@ -243,7 +247,7 @@ def menu() -> None:
 		["q2", "0", ["q2"]],
 		["q2", "1", ["q2"]]
 	])
-	#autobot1.show()
+	autobot1.show()
 
 	autobot2: AFD = AFD()
 	autobot2.set_descricao("Automato que reconhece cadeias que começam em 1 e terminam em 0")
@@ -313,7 +317,7 @@ def menu() -> None:
 		["q3", "0", ["q0"]],
 	])
 	
-	autobot5.show()
+	#autobot5.show()
 
 	print()
 
@@ -322,10 +326,10 @@ def menu() -> None:
 		if (entrada.lower() == "sair"):
 			break
 		
-		if(tem_multiplos_estados(autobot5)):
+		if(tem_multiplos_estados(autobot1)):
 			print("AFD NAO POSSUI MULTIPLOS PROXIMOS ESTADOS\n")
 		else:
-			if(verifica_cadeia(autobot5, entrada)):
+			if(verifica_cadeia(autobot1, entrada)):
 				print("CADEIA ACEITA!!!\n")
 			else:
 				print("CADEIA REJEITADA!!!\n")		
