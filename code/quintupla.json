@@ -60,7 +60,7 @@
 		    ["q1", "1", ["q2"]],
 		    ["q1", "0", ["q1"]],
 		    ["q2", "1", ["q2"]],
-		    ["q2", "0", ["q2"]],
+		    ["q2", "0", ["q2"]]
         ]
     },
     "exemplo_5":{
@@ -78,6 +78,41 @@
 		    ["q2", "0", ["q3"]],
 		    ["q3", "1", ["q1"]],
 		    ["q3", "0", ["q0"]]
+        ]
+    },
+    "AFD_1":{
+        "descricao": "Aceita numeros impares de 1.",
+        "alfabeto": ["0","1"],
+        "estados": ["A", "B"],
+        "estado_inicial": "A",
+        "estados_finais": ["B"],
+        "funcao_transicao": [
+            ["A", "0", ["A"]],
+            ["A", "1", ["B"]],
+            ["B", "0", ["B"]],
+            ["B", "1", ["A"]]
+        ]
+    },
+    "AFD_2_A":{
+        "descricao": "Não aceita nenhuma cadeia, nem cadeia vazia.",
+        "alfabeto": ["a","b"],
+        "estados": ["q0"],
+        "estado_inicial": "q0",
+        "estados_finais": [],
+        "funcao_transicao": [
+            ["q0", "a", ["q0"]],
+            ["q0", "b", ["q0"]]
+        ]
+    },
+    "AFD_2_B":{
+        "descricao": "Aceita qualquer cadeia, que esteja dentro do alfabeto, cadeia vazia incluso.",
+        "alfabeto": ["a","b"],
+        "estados": ["q0"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q0"],
+        "funcao_transicao": [
+            ["q0", "a", ["q0"]],
+            ["q0", "b", ["q0"]]
         ]
     }
 }

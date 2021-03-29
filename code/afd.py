@@ -33,13 +33,25 @@ class AFD:
 	_estados_finais: list = []
 	_funcao_transicao: list = []
 
-	def __init__(self) -> None:
-		"""
-		filename: arquivo
-		setters & getters
-		"""
+	def __init__(self, filename: str, exemplo: str) -> None:
+		self.exemplo = exemplo
+		self.filename = filename
+
+		arquivo = open(self.filename, "r")
+		conteudo: str = arquivo.read()
+		json: dict = ast.literal_eval(conteudo)
+		arquivo.close()
+
+		self.set_descricao(json[self.exemplo]["descricao"])
+		self.set_alfabeto(json[self.exemplo]["alfabeto"])
+		self.set_estados(json[self.exemplo]["estados"])
+		self.set_estado_inicial(json[self.exemplo]["estado_inicial"])
+		self.set_estados_finais(json[self.exemplo]["estados_finais"])
+		self.set_funcao_transicao(json[self.exemplo]["funcao_transicao"])
 		return
 	
+
+
 	def get_descricao(self) -> str:
 		return self._descricao
 	
@@ -155,6 +167,8 @@ def verifica_estados(automato: AFD, entrada: list, estado_atual: str, estados_fi
 
 
 def verifica_cadeia(automato: AFD, entrada: str) -> bool:
+	if entrada == '':
+		return automato.get_estado_inicial() in automato.get_estados_finais()
 	
 	entrada_processada: list = entrada.split(" ")
 
@@ -219,22 +233,9 @@ def tem_multiplos_estados(automato: AFD) -> bool:
 	return flag
 
 def menu() -> None:
-	arquivo = open("quintupla.txt", "r")
-	conteudo = arquivo.read()
-	automato = ast.literal_eval(conteudo)
-	arquivo.close()
-
-	exemplo: str = "exemplo_5"
-
-	autobot: AFD = AFD()
-	autobot.set_descricao(automato[exemplo]["descricao"])
-	autobot.set_alfabeto(automato[exemplo]["alfabeto"])
-	autobot.set_estados(automato[exemplo]["estados"])
-	autobot.set_estado_inicial(automato[exemplo]["estado_inicial"])
-	autobot.set_estados_finais(automato[exemplo]["estados_finais"])
-	autobot.set_funcao_transicao(automato[exemplo]["funcao_transicao"])
-
+	autobot: AFD = AFD("quintupla.json", "exemplo_2")
 	autobot.show()
+
 	print()
 
 	while (True):
