@@ -155,6 +155,8 @@ def verifica_estados(automato: AFD, entrada: list, estado_atual: str, estados_fi
 
 
 def verifica_cadeia(automato: AFD, entrada: str) -> bool:
+	if entrada == '':
+		return automato.get_estado_inicial() in automato.get_estados_finais()
 	
 	entrada_processada: list = entrada.split(" ")
 
@@ -224,7 +226,7 @@ def menu() -> None:
 	automato = ast.literal_eval(conteudo)
 	arquivo.close()
 
-	exemplo: str = "exemplo_5"
+	exemplo: str = "exemplo_2"
 
 	autobot: AFD = AFD()
 	autobot.set_descricao(automato[exemplo]["descricao"])
