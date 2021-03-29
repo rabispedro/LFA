@@ -224,7 +224,7 @@ def menu() -> None:
 	automato = ast.literal_eval(conteudo)
 	arquivo.close()
 
-	exemplo: str = "exemplo_2"
+	exemplo: str = "exemplo_5"
 
 	autobot: AFD = AFD()
 	autobot.set_descricao(automato[exemplo]["descricao"])
