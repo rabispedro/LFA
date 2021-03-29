@@ -1,0 +1,96 @@
+{
+    "exemplo_1":{
+        "descricao": "Automato que reconhece cadeias que começam em 0",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q1"],
+        "funcao_transicao": [
+            ["q0", "0", ["q1"]],
+            ["q0", "1", ["q2"]],
+            ["q1", "0", ["q1"]],
+            ["q1", "1", ["q1"]],
+            ["q2", "0", ["q2"]],
+            ["q2", "1", ["q2"]]
+        ]
+    },
+    "exemplo_2":{
+        "descricao": "Automato que reconhece números pares de 0's e 1's",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2","q3"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q0"],
+        "funcao_transicao": [
+            ["q0", "0", ["q1"]],
+            ["q0", "1", ["q3"]],
+            ["q1", "0", ["q0"]],
+            ["q1", "1", ["q2"]],
+            ["q2", "0", ["q3"]],
+            ["q2", "1", ["q1"]],
+            ["q3", "0", ["q2"]],
+            ["q3", "1", ["q0"]]    
+	    ]
+    },
+    "exemplo_3":{
+        "descricao": "Automato que reconhece cadeias que começam em 1 e terminam em 0",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q2"],
+        "funcao_transicao": [
+            ["q0", "1", ["q1"]],
+            ["q0", "0", ["q0"]],
+            ["q1", "1", ["q1"]],
+            ["q1", "0", ["q2"]],
+            ["q2", "0", ["q2"]],
+            ["q2", "1", ["q1"]]
+        ]
+    },
+    "exemplo_4":{
+        "descricao": "Automato que reconhece cadeias que começam em 0",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q1"],
+        "funcao_transicao": [
+            ["q0", "0", ["q1"]],
+            ["q0", "1", ["q2"]],
+            ["q1", "0", ["q1"]],
+            ["q1", "1", ["q1"]],
+            ["q2", "0", ["q2"]],
+            ["q2", "1", ["q2"]]
+        ]
+    },
+    "exemplo_5":{
+        "descricao": "Automato que reconhece cadeias que possuem 01 em algum lugar",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q1"],
+        "funcao_transicao": [
+            ["q0", "1", ["q0"]],
+		    ["q0", "0", ["q1"]],
+		    ["q1", "1", ["q2"]],
+		    ["q1", "0", ["q1"]],
+		    ["q2", "1", ["q2"]],
+		    ["q2", "0", ["q2"]],
+        ]
+    },
+    "exemplo_6":{
+        "descricao": "Automato que reconhece cadeias que terminam com 100",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2","q3"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q3"],
+        "funcao_transicao": [
+            ["q0", "1", ["q1"]],
+		    ["q0", "0", ["q0"]],
+		    ["q1", "1", ["q1"]],
+		    ["q1", "0", ["q2"]],
+		    ["q2", "1", ["q1"]],
+		    ["q2", "0", ["q3"]],
+		    ["q3", "1", ["q1"]],
+		    ["q3", "0", ["q0"]]
+        ]
+    }
+}

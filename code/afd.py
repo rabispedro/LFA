@@ -1,3 +1,5 @@
+import ast
+
 """
 Automato Finito Deterministico
 	Descricao: breve descrição opcional para informar sobre o AFD
@@ -186,8 +188,9 @@ def eh_estado_morto(estado: str, automato: AFD) -> bool:
 
 	return eh_morto
 		
-
+# Retorna uma lista dos estados que tem autoinputs
 def tem_autoinput(automato: AFD) -> list:
+
 	estados: list = automato.get_estados()
 	delta: list = automato.get_funcao_transicao()
 	estados_com_autoinputs: list = []
@@ -196,6 +199,7 @@ def tem_autoinput(automato: AFD) -> list:
 		if(transicoes[0] == transicoes[2][0]):
 			estados_com_autoinputs.append(transicoes[0])
 	return estados_com_autoinputs
+
 
 def tem_multiplos_estados(automato: AFD) -> bool:
 
@@ -215,110 +219,22 @@ def tem_multiplos_estados(automato: AFD) -> bool:
 	return flag
 
 def menu() -> None:
-	autobot0: AFD = AFD()
-	autobot0.set_descricao("Automato que reconhece números pares de 0's e 1's")
-	autobot0.set_alfabeto(["0", "1"])
-	autobot0.set_estados(["q0", "q1", "q2", "q3"])
-	autobot0.set_estado_inicial("q0")
-	autobot0.set_estados_finais(["q0"])
-	autobot0.set_funcao_transicao([
-		["q0", "0", ["q1"]],
-		["q0", "1", ["q3"]],
-		["q1", "0", ["q0"]],
-		["q1", "1", ["q2"]],
-		["q2", "0", ["q3"]],
-		["q2", "1", ["q1"]],
-		["q3", "0", ["q2"]],
-		["q3", "1", ["q0"]]
-	])
-	# autobot0.show()	
+	arquivo = open("quintupla.txt", "r")
+	conteudo = arquivo.read()
+	automato = ast.literal_eval(conteudo)
+	arquivo.close()
 
-	autobot1: AFD = AFD()
-	autobot1.set_descricao("Automato que reconhece cadeias que começam em 0")
-	autobot1.set_alfabeto(["0", "1"])
-	autobot1.set_estados(["q0", "q1", "q2"])
-	autobot1.set_estado_inicial("q0")
-	autobot1.set_estados_finais(["q1"])
-	autobot1.set_funcao_transicao([
-		["q0", "0", ["q1"]],
-		["q0", "1", ["q2"]],
-		["q1", "0", ["q1"]],
-		["q1", "1", ["q1"]],
-		["q2", "0", ["q2"]],
-		["q2", "1", ["q2"]]
-	])
-	autobot1.show()
+	exemplo: str = "exemplo_2"
 
-	autobot2: AFD = AFD()
-	autobot2.set_descricao("Automato que reconhece cadeias que começam em 1 e terminam em 0")
-	autobot2.set_alfabeto(["0", "1"])
-	autobot2.set_estados(["q0", "q1", "q2"])
-	autobot2.set_estado_inicial("q0")
-	autobot2.set_estados_finais(["q2"])
-	autobot2.set_funcao_transicao([
-		["q0", "1", ["q1"]],
-		["q0", "0", ["q0"]],
-		["q1", "1", ["q1"]],
-		["q1", "0", ["q2"]],
-		["q2", "0", ["q2"]],
-		["q2", "1", ["q1"]]
-	])
-	# autobot2.show()
+	autobot: AFD = AFD()
+	autobot.set_descricao(automato[exemplo]["descricao"])
+	autobot.set_alfabeto(automato[exemplo]["alfabeto"])
+	autobot.set_estados(automato[exemplo]["estados"])
+	autobot.set_estado_inicial(automato[exemplo]["estado_inicial"])
+	autobot.set_estados_finais(automato[exemplo]["estados_finais"])
+	autobot.set_funcao_transicao(automato[exemplo]["funcao_transicao"])
 
-	autobot3: AFD = AFD()
-	autobot3.set_descricao("Automato que reconhece cadeias que possuem tres 0's consecutivos")
-	autobot3.set_alfabeto(["0", "1"])
-	autobot3.set_estados(["q0", "q1", "q2", "q3"])
-	autobot3.set_estado_inicial("q0")
-	autobot3.set_estados_finais(["q1","q2","q3"])
-	autobot3.set_funcao_transicao([
-		["q0", "1", ["q0"]],
-		["q0", "0", ["q1"]],
-		["q1", "1", ["q1"]],
-		["q1", "0", ["q2"]],
-		["q2", "1", ["q2"]],
-		["q2", "0", ["q3"]],
-		["q3", "0", ["q1"]],
-		["q3", "1", ["q3"]]
-	])
-	# autobot3.show()
-
-	autobot4: AFD = AFD()
-	autobot4.set_descricao("Automato que reconhece cadeias que possuem 01 em algum lugar")
-	autobot4.set_alfabeto(["0", "1"])
-	autobot4.set_estados(["q0", "q1", "q2"])
-	autobot4.set_estado_inicial("q0")
-	autobot4.set_estados_finais(["q2"])
-	autobot4.set_funcao_transicao([
-		["q0", "1", ["q0"]],
-		["q0", "0", ["q1"]],
-		["q1", "1", ["q2"]],
-		["q1", "0", ["q1"]],
-		["q2", "1", ["q2"]],
-		["q2", "0", ["q2"]],
-	])
-	
-	# autobot4.show()
-
-	autobot5: AFD = AFD()
-	autobot5.set_descricao("Automato que reconhece cadeias que terminam com 100")
-	autobot5.set_alfabeto(["0", "1"])
-	autobot5.set_estados(["q0", "q1", "q2", "q3"])
-	autobot5.set_estado_inicial("q0")
-	autobot5.set_estados_finais(["q3"])
-	autobot5.set_funcao_transicao([
-		["q0", "1", ["q1"]],
-		["q0", "0", ["q0"]],
-		["q1", "1", ["q1"]],
-		["q1", "0", ["q2"]],
-		["q2", "1", ["q1"]],
-		["q2", "0", ["q3"]],
-		["q3", "1", ["q1"]],
-		["q3", "0", ["q0"]],
-	])
-	
-	#autobot5.show()
-
+	autobot.show()
 	print()
 
 	while (True):
@@ -326,10 +242,10 @@ def menu() -> None:
 		if (entrada.lower() == "sair"):
 			break
 		
-		if(tem_multiplos_estados(autobot1)):
+		if(tem_multiplos_estados(autobot)):
 			print("AFD NAO POSSUI MULTIPLOS PROXIMOS ESTADOS\n")
 		else:
-			if(verifica_cadeia(autobot1, entrada)):
+			if(verifica_cadeia(autobot, entrada)):
 				print("CADEIA ACEITA!!!\n")
 			else:
 				print("CADEIA REJEITADA!!!\n")		
