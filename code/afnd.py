@@ -105,15 +105,6 @@ class AFND:
 	def verifica_estados(self, entrada: list, estado_atual: str, estados_finais: list) -> None:
 		delta: list = self.get_funcao_transicao()
 
-		if(self.eh_estado_morto(estado_atual)):
-			proximo_estado: list = [estado_atual]
-
-			for entrada_atual in entrada:
-				print("[",estado_atual,"]",end="")	
-				print("----[",entrada_atual,"]---->",proximo_estado)		
-			estados_finais = []
-			return
-
 		if(entrada == []):
 			estados_finais.append(estado_atual)
 			return
@@ -158,26 +149,6 @@ class AFND:
 					return flag
 		return flag
 
-	def eh_estado_morto(self, estado: str) -> bool:
-		tamanho_alfabeto: int = len(self.get_alfabeto())
-		estados_com_autoinputs: list = self.tem_autoinput()
-		eh_morto: bool = False
-
-		if(estados_com_autoinputs.count(estado) == tamanho_alfabeto) and (estado not in self.get_estados_finais()):
-			eh_morto = True
-
-		return eh_morto
-			
-	# Retorna uma lista dos estados que tem autoinputs
-	def tem_autoinput(self) -> list:
-		estados: list = self.get_estados()
-		delta: list = self.get_funcao_transicao()
-		estados_com_autoinputs: list = []
-
-		for transicoes in delta:
-			if(transicoes[0] == transicoes[2][0]):
-				estados_com_autoinputs.append(transicoes[0])
-		return estados_com_autoinputs
 
 	def tem_multiplos_estados(self) -> bool:
 		delta: list = self.get_funcao_transicao()
