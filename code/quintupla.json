@@ -116,3 +116,32 @@
         ]
     }
 }
+
+{
+    "exemplo_1":{
+        "descricao": "Automato que reconhece cadeias que começam em 0",
+        "alfabeto": ["0","1"],
+        "estados": ["q0", "q1", "q2"],
+        "estado_inicial": "q0",
+        "estados_finais": ["q2"],
+        "funcao_transicao": [
+            ["q0", "0", ["q1"]],
+            ["q0", "1", ["q1"]],
+            ["q0", "0", ["q1"]],
+            ["q1", "1", ["q2"]]
+        ]
+    }
+}
+"exemplo_1":{
+    "descricao": "Automato que reconhece cadeias que começam em 0",
+    "alfabeto": ["0","1"],
+    "estados": ["q0", "q1", "q2"],
+    "estado_inicial": "q0",
+    "estados_finais": ["q2"],
+    "funcao_transicao": [
+        ["q0", "0", ["q1"]],
+        ["q0", "1", ["q1"]],
+        ["q0", "0", ["q1"]],
+        ["q1", "1", ["q2"]]
+    ]
+}

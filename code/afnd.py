@@ -1,6 +1,6 @@
 import ast
 
-class AFD:
+class AFND:
 	_descricao: str = ""
 	_alfabeto: list = []
 	_estados: list = []
@@ -24,6 +24,7 @@ class AFD:
 			self.set_estado_inicial(json[exemplo]["estado_inicial"])
 			self.set_estados_finais(json[exemplo]["estados_finais"])
 			self.set_funcao_transicao(json[exemplo]["funcao_transicao"])
+
 		return
 	
 	def get_descricao(self) -> str:
