@@ -1,4 +1,14 @@
 {
+	"exemplo_1":{
+		"descricao": "Automato vazio",
+		"alfabeto": [],
+		"estados": [],
+		"estado_inicial": "",
+		"estados_finais": [],
+		"funcao_transicao": [
+			
+		]
+	},
 	"exemplo_2":{
 		"descricao": "Automato que reconhece números pares de 0's e 1's",
 		"alfabeto": ["0","1"],
