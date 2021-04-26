@@ -7,7 +7,7 @@ def menu() -> None:
 	automatos: list = []
 
 	#	Inicialização dos Automatos
-	afd_nome: str = "./afd_data.json"
+	afd_nome: str = "./testes.json"
 	afd_exemplo: str = "exemplo_1"
 	autobot: afd = afd.AFD(afd_nome, afd_exemplo, True)
 	automatos.append(autobot)
@@ -28,7 +28,7 @@ def menu() -> None:
 	print("2) AFND")
 	print("3) AFNE")
 	print("4) Conversor AFND -> AFD")
-	# print("5) Conversor AFNE -> AFD")
+	print("5) Conversor AFNE -> AFD")
 	opt: int = int(input("Opcao: "))
 	print()
 	if(opt == 1):
@@ -39,6 +39,8 @@ def menu() -> None:
 		print("AFNE Selecionado")
 	elif(opt == 4):
 		print("Conversor AFND -> AFD Secelionado")
+	elif(opt == 5):
+		print("Conversor AFNE -> AFD Secelionado")
 	else:
 		print("Servico Indisponível. ;(\n")
 		return
@@ -61,16 +63,17 @@ def menu() -> None:
 		print("Saindo :(\n")
 		return
 	elif(opt == 3):
-		# print("Em obras...")
-		automato = afnd.AFND(afnd_nome, afnd_exemplo, True)
+		print("Convertendo: AFND ---> AFD\n")
 		convert = conversor.Conversor()
-		convert.converteAFND(automato)
+		convert.afnd_to_afd(automatos[1])
 
-		print("Saindo :(\n")
+		print("Saindo :)\n")
 		return
 	elif(opt == 4):
-		print("Saindo :(\n")
-		print("Em obras...")
+		print("Convertendo: AFNE ---> AFD\n")
+		convert = conversor.Conversor()
+		convert.converteAFNE(automatos[2])
+		print("Saindo :)\n")
 		return
 
 menu()

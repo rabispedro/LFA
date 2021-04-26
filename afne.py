@@ -107,6 +107,8 @@ class AFNE:
 		return flag
 
 	def verifica_estados(self, entrada: list, estado_atual: str, estados_finais: list) -> None:
+		
+		
 		if(entrada == []):
 			estados_finais.append(estado_atual)
 			teste: list = []
@@ -175,43 +177,6 @@ class AFNE:
 					return flag
 		return flag
 
-	def eh_estado_morto(self, estado: str) -> bool:
-		tamanho_alfabeto: int = len(self.get_alfabeto())
-		estados_com_autoinputs: list = self.tem_autoinput()
-		eh_morto: bool = False
-
-		if(estados_com_autoinputs.count(estado) == tamanho_alfabeto) and (estado not in self.get_estados_finais()):
-			eh_morto = True
-
-		return eh_morto
-			
-	# Retorna uma lista dos estados que tem autoinputs
-	def tem_autoinput(self) -> list:
-		estados: list = self.get_estados()
-		delta: list = self.get_funcao_transicao()
-		estados_com_autoinputs: list = []
-
-		for transicoes in delta:
-			if(transicoes[0] == transicoes[2][0]):
-				estados_com_autoinputs.append(transicoes[0])
-		return estados_com_autoinputs
-
-	def tem_multiplos_estados(self) -> bool:
-		delta: list = self.get_funcao_transicao()
-		tamanho_estados: int = len(self.get_estados())
-		tamanho_alfabeto: int = len(self.get_alfabeto())
-		flag: bool  = False
-
-		# verifica se algum estado recebe mais que len(Sigma) entradas
-		if(len(delta) > tamanho_alfabeto*tamanho_estados):
-			flag = True
-
-		# verifica se tem mais que um próximo estado
-		for transicoes in delta:
-			if len(transicoes[2]) > 1:
-				flag = True
-		return flag
-
 	def e_fecho(self, estado_atual: str) -> list:
 		estados_finais: list = []
 		self.auxiliar_fecho(estado_atual, estados_finais)
@@ -237,50 +202,9 @@ class AFNE:
 				while(j < len(delta[i][2])):
 					estado_atual = delta[i][2][j]
 					if(not (estado_atual in estados_encontrados)):
-						auxiliar_fecho(estado_atual, estados_encontrados)
+						self.auxiliar_fecho(estado_atual, estados_encontrados)
 					j += 1
 				break
 			i += 1
 
-			return
-
-		"""
-		Guardar efechos atingidos + [proximos efechos]
-        Caso Base: não há proximos estados -> gravar estado atual
-        ["q1", "q2", "q3", ...]
-
-        efecho (q1) = q1 + efecho (q2) = q1 + q2 + efecho(q3) ...
-        10! = 10 * 9! = 10 * 9 * 8! = 10 * 9 * 8 * 7! ...
-        
-
-
-
-        CONVERSÃO AFNE -> AFD
-
-        ["q1", "a", ["q0", "q2"]],
-        ["q1", "&", ["q2"],
-        ["q2", "&", ["q3"],
-        ["q3", "&", ["q5"]
-        ["q3", "b", ["q0", "q2"]],
-
-        ["q0", "q2"] => "qA"
-        e-fecho("q1") => ["q1", "q2", "q3", "q5"]
-        
-        ["q1", "a", ["qA"]],
-        ["q1", "&", ["q1", "q2", "q3", "q5"]]
-
-
-        delta [0, 1, 2]
-        se ( len( atual[i][2]) > 1 ):
-            flag: bool = False
-            
-            for estado in atual[i][2]:
-                flag = (estado in LISTA DE ESTADOS NOVOS)
-            
-            if(flag):
-                #    Estado Novo ja foi feito
-                break
-            else:
-                #    PRECISA CRIAR UM NOVO ESTADO
-
-		"""
+		return

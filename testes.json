@@ -1,0 +1,84 @@
+{
+    "exemplo_1": {
+        "descricao": "AFD convertido com base no AFND: Automato que reconhece cadeias que terminam com \"01\"",
+        "alfabeto": [
+            "0",
+            "1"
+        ],
+        "estados": [
+            "q0",
+            "q1",
+            "q2",
+            "q0-q1",
+            "",
+            "q1-q2"
+        ],
+        "estado_inicial": "q0",
+        "estados_finais": [
+            "q2",
+            "q1-q2"
+        ],
+        "funcao_transicao": [
+            [
+                "q0",
+                "0",
+                "q0-q1"
+            ],
+            [
+                "q0",
+                "1",
+                "q1"
+            ],
+            [
+                "q1",
+                "0",
+                "q0"
+            ],
+            [
+                "q1",
+                "1",
+                "q2"
+            ],
+            [
+                "q2",
+                "0",
+                ""
+            ],
+            [
+                "q2",
+                "1",
+                ""
+            ],
+            [
+                "q0-q1",
+                "0",
+                "q0-q1"
+            ],
+            [
+                "q0-q1",
+                "1",
+                "q1-q2"
+            ],
+            [
+                "",
+                "0",
+                ""
+            ],
+            [
+                "",
+                "1",
+                ""
+            ],
+            [
+                "q1-q2",
+                "0",
+                "q0"
+            ],
+            [
+                "q1-q2",
+                "1",
+                "q2"
+            ]
+        ]
+    }
+}
