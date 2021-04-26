@@ -55,9 +55,9 @@ def menu() -> None:
 				break
 
 			if(automatos[opt].verifica_cadeia(entrada)):
-				print("CADEIA ACEITA!!!\n")
+				print("\033[32mCADEIA ACEITA!!!\033[0;0m\n")
 			else:
-				print("CADEIA REJEITADA!!!\n")		
+				print("\033[31mCADEIA REJEITADA!!!\033[0;0m\n")		
 			print("="*128)
 		
 		print("Saindo :(\n")

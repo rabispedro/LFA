@@ -5,22 +5,24 @@ import ast
 import json
 
 def escreve_no_arquivo(descricao, alfabeto, estados, estado_inicial, estados_finais, funcao_transicao):
-	dicionario =  {
-			"exemplo_1":{
-				"descricao": descricao,
-				"alfabeto": alfabeto,
-				"estados": estados,
-				"estado_inicial": estado_inicial,
-				"estados_finais": estados_finais,
-				"funcao_transicao": funcao_transicao
-			}
-	}
-	json_object = json.dumps(dicionario, indent = 2)
-	with open("testes.json", "w") as outfile:
-		outfile.write(json_object)
-	return
+    for i in range(len(funcao_transicao)):
+        funcao_transicao[i][2] = [funcao_transicao[i][2]]
 
-
+    dicionario =  {
+            "exemplo_1":{
+                "descricao": descricao,
+                "alfabeto": alfabeto,
+                "estados": estados,
+                "estado_inicial": estado_inicial,
+                "estados_finais": estados_finais,
+                "funcao_transicao": funcao_transicao
+            }
+    }
+    json_object = json.dumps(dicionario, indent = 2)
+    with open("testes.json", "w") as outfile:
+        outfile.write(json_object)
+    return
+		
 def formata_funcao_transicao(regras):
 	nova_funcao_transicao = []
 	for regra in regras:
@@ -52,9 +54,10 @@ class Conversor:
 			
 			# converter regras
 			regras_afnd = afnd.get_funcao_transicao()
-			for regra_afnd in regras_afnd:
+			for regra_afnd in regras_afnd: # percorre as regras do AFND e converte uma a uma
 				# print(str(regra_afnd))
 				
+				# regra_afnd['q0' , '0' , '[q0, q1]']
 				# converte estado da regra
 				estado = regra_afnd[0]
 				if not estado in estados:
@@ -78,6 +81,7 @@ class Conversor:
 
 				# print(str(regra_afd))
 
+				# verificar casos do tipo ['q0','q1']
 				# converter os sub estados gerados
 				for est in estados:
 					# print("est: "+ str(est))
@@ -85,12 +89,17 @@ class Conversor:
 					for alfa in afnd.get_alfabeto():
 						for regra in regras_afd:
 							# print('regra: '+ str(regra))
-							if regra[0] == est and regra[1] == alfa:
+
+							# verificar se o estado com o simbolo do alfabeto já está como regra
+							# no vetor de regras do afd convertido
+							if regra[0] == est and regra[1] == alfa: 
 								break
 							
 							novos_estados: list = []
 							sub_estados = str(est).split('-')
 
+							# buscar a regra especifica de cada estado no AFND que gerou o estado atual no AFD
+							# e concatenar os subestados
 							for sub in sub_estados:
 								# print('sub: '+sub)
 								for afnd_regra in regras_afnd:
@@ -104,6 +113,7 @@ class Conversor:
 							nova_regra_afd.append(alfa)
 							nova_regra_afd.append(agrupa_estados(novos_estados))
 
+							# adicionar o novo estado gerado da concatenação dos subestados
 							if not agrupa_estados(novos_estados) in estados:
 								estados.append(agrupa_estados(novos_estados))
 
@@ -117,6 +127,7 @@ class Conversor:
 			# 	print("regra_afd: "+ str(regra))
 			# print(list_to_str(estados))
 
+			# identificar estados finais
 			finais: list = []
 			for estado in estados:
 				sub_estados: list = str(estado).split('-')
@@ -129,12 +140,12 @@ class Conversor:
 			automato.set_estados_finais(finais)
 			automato.set_funcao_transicao(regras_afd)
 
-			print(str(automato.get_descricao()))
-			print(str(automato.get_alfabeto()))
-			print(str(automato.get_estado_inicial()))
-			print(str(automato.get_estados()))
-			print(str(automato.get_estados_finais()))
-			print(str(automato.get_funcao_transicao()))
+			# print(str(automato.get_descricao()))
+			# print(str(automato.get_alfabeto()))
+			# print(str(automato.get_estado_inicial()))
+			# print(str(automato.get_estados()))
+			# print(str(automato.get_estados_finais()))
+			# print(str(automato.get_funcao_transicao()))
 
 			escreve_no_arquivo(automato.get_descricao(),automato.get_alfabeto(),automato.get_estados(),automato.get_estado_inicial(),automato.get_estados_finais(), automato.get_funcao_transicao())
 			return automato

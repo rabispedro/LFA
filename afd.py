@@ -140,7 +140,7 @@ class AFD:
 
 		#	Verifica Alfabeto
 		if(not self.verifica_alfabeto(entrada_processada)):
-			print("Erro: Entrada não pertence ao alfabeto.")
+			print("\033[33mErro: Entrada não pertence ao alfabeto.\033[0;0m")
 			return False
 				
 		#	Percorre Estados
