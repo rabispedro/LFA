@@ -123,8 +123,8 @@ class AFD:
 		while (i < len(delta)):
 			if((estado_atual == delta[i][0]) and (entrada_atual == delta[i][1])):
 				#	Estado encontrado e entrada encontrada
-				print("[",estado_atual,"]",end="")
-				print("----[",entrada_atual,"]---->",delta[i][2])
+				print("\033[36m[",estado_atual,"]",end="")
+				print("----[",entrada_atual,"]---->",delta[i][2],"\033[0;0m")
 
 				j: int = 0
 				while( j < len(delta[i][2])):
