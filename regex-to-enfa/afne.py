@@ -176,7 +176,21 @@ class AFNE:
 
 	def verifica_cadeia(self, entrada: str) -> bool:
 		if(len(entrada) == 0):
-			return (self._estado_inicial in self._estados_finais)
+			print ("Estados Alcançados:", self.get_estado_inicial())
+			fecho: list = self.e_fecho(self.get_estado_inicial())
+			estados_finais: list = []
+			
+			for obj in fecho:
+				estados_finais.append(obj)
+			flag: bool = False
+			
+			for obj in estados_finais:
+				if obj in self.get_estados_finais():
+					flag = True
+					return flag
+			
+			return flag
+
 
 		entrada_processada: list = entrada.split(" ")
 										
