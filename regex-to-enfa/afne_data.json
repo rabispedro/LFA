@@ -1,6 +1,6 @@
 {
 	"exemplo_1":{
-		"descricao": "Automato que reconhece que qualquer símbolo \"a\" antecede qualquer símbolo \"b\".",
+		"descricao": "Automato que reconhece que qualquer símbolo 'a' antecede qualquer símbolo 'b'.",
 		"alfabeto": ["a", "b"],
 		"estados": ["q0", "q1"],
 		"estado_inicial": "q0",
@@ -10,33 +10,12 @@
 			["q0", "b", []],
 			["q0", "&", ["q1"]],
 			["q1", "a", []],
-			["q1", "b", ["q1"]]
-		]
-	},
-	"exemplo_2":{
-		"descricao": "Automato que reconhece repetições de \"ba\" (inclusive nenhuma), seguidos de \"ca\" ou cadeia vazia.",
-		"alfabeto": ["a", "b", "c"],
-		"estados": ["q0", "q1", "q2", "q3"],
-		"estado_inicial": "q0",
-		"estados_finais": ["q3"],
-		"funcao_transicao": [
-			["q0", "a", []],
-			["q0", "b", ["q1"]],
-			["q0", "c", ["q2"]],
-			["q0", "&", ["q3"]],
-			["q1", "a", ["q0"]],
-			["q1", "b", []],
-			["q1", "c", []],
-			["q2", "a", ["q3"]],
-			["q2", "b", []],
-			["q2", "c", []],
-			["q3", "a", []],
-			["q3", "b", []],
-			["q3", "c", []]
+			["q1", "b", ["q1"]],
+			["q1", "&", []]
 		]
 	},
 	"exemplo_3":{
-		"descricao": "Automato que reconhece cadeias que terminam com \"01\".",
+		"descricao": "Automato que reconhece cadeias que terminam com '01'.",
 		"alfabeto": ["0","1"],
 		"estados": ["q0", "q1", "q2"],
 		"estado_inicial": "q0",
@@ -44,12 +23,17 @@
 		"funcao_transicao": [
 				["q0", "0", ["q0", "q1"]],
 				["q0", "1", ["q1"]],
+				["q0", "&", []],
 				["q1", "0", ["q0"]],
-				["q1", "1", ["q2"]]
+				["q1", "1", ["q2"]],
+				["q1", "&", []],
+				["q2", "0", []],
+				["q2", "1", []],
+				["q2", "&", []]
 		]
 	},
 	"exemplo_4":{
-		"descricao": "Automato que reconhece cadeias que possuam \"a\", \"b\" ou \"c\".",
+		"descricao": "Automato que reconhece cadeias que possuam 'a', 'b' ou 'c'.",
 		"alfabeto": ["a","b","c"],
 		"estados": ["q0"],
 		"estado_inicial": "q0",
@@ -61,7 +45,7 @@
 		]
 	},
 	"exemplo_5":{
-		"descricao": "Automato que reconhece cadeias de \"0\" que antecedam \"1\"",
+		"descricao": "Automato que reconhece cadeias de '0' que antecedam '1'",
 		"alfabeto": ["a","b","c"],
 		"estados": ["q0"],
 		"estado_inicial": "q0",

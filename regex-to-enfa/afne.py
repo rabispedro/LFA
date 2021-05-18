@@ -113,7 +113,7 @@ class AFNE:
 			teste: list = []
 			teste = self.e_fecho(estado_atual)
 			estados_finais.append(teste)
-			print("Teste:",teste)
+			# print("Teste:",teste)
 			return
 
 		entrada_atual: str = entrada[0]
@@ -128,9 +128,8 @@ class AFNE:
 				flag = True
 				break
 			i += 1
-			
+						
 		if(flag):
-
 			i = 0
 			while (i < len(delta)):
 				if((estado_atual == delta[i][0]) and ((entrada_atual == delta[i][1]) or (self.get_cadeia_vazia() == delta[i][1]))):

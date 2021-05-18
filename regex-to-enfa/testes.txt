@@ -1,3 +1,5 @@
+TESTES ER -> AFNE:
+
 
 >>>>> Exemplo 1: 1.(0+1)
 
@@ -118,3 +120,72 @@ q11:$>q8
 q7:$>q8
 q6:$>q7
 q12:$>q0,q5
+
+>>>>>>> Exemplo 5: 1*+0*
+
+#states
+q0
+q1
+q2
+q3
+q4
+q5
+q6
+#initial
+q6
+#accepting
+q0
+q2
+q3
+q5
+#alphabet
+0
+1
+#transitions
+q0:$>q1
+q1:1>q2
+q2:$>q1
+q3:$>q4
+q4:0>q5
+q5:$>q4
+q6:$>q0,q3
+
+################################################################################
+TESTES AFNE:
+
+Exemplo 1: Automato que reconhece que qualquer símbolo 'a' antecede qualquer símbolo 'b'.
+
+#states
+q0
+q1
+#initial
+q0
+#accepting
+q1
+#alphabet
+a
+b
+#transitions
+q0:a>q0
+q0:$>q1
+q1:b>q1
+
+
+Exemplo 2: Automatos que terminam em 01
+
+#states
+q0
+q1
+q2
+#initial
+q0
+#accepting
+q2
+#alphabet
+0
+1
+#transitions
+q0:0>q0,q1
+q0:1>q1
+q1:0>q0
+q1:1>q2

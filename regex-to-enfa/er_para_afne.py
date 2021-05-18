@@ -341,7 +341,7 @@ def escreve_no_arquivo(automato: dict, expressao: str):
     }
   }
 
-  json_object = json.dumps(dicionario, indent = 2)
+  json_object = json.dumps(dicionario, indent = 1)
   with open("afne_convertido.json", "w") as outfile:
     outfile.write(json_object)
   return

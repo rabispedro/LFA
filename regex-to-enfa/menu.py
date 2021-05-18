@@ -6,16 +6,34 @@ def menu() -> None:
   afne_exemplo: str = "exemplo_1"
   robocop: afne = afne.AFNE(afne_nome, afne_exemplo, True)
 
+  afne_nome: str = "./afne_data.json"
+  afne_exemplo: str = "exemplo_1"
+  autobot: afne = afne.AFNE(afne_nome, afne_exemplo, True)
+
   print("Selecione a opção: ")
   print("1) AFNE")
   print("2) Conversor ER -> AFNE")
-  print("3) Sair")
+  print("3) AFNE Convertido")
+  print("4) Sair")
 
   opcao_1: int = int(input("Opcao: "))
 
   while True:
-    if opcao_1 == 3:
-      break
+    if opcao_1 == 1:
+      autobot.show()
+      while (True):        
+        print('\n\n')
+        entrada: str = input("Digite uma entrada (separe os simbolos por espaços ou digite 'sair'): ")
+
+        if entrada.lower() == 'sair':
+          break
+        if autobot.verifica_cadeia(entrada):
+          print("\033[32mCADEIA ACEITA!!!\033[0;0m\n")
+        else:
+          print("\033[31mCADEIA REJEITADA!!!\033[0;0m\n")
+        print("="*128)
+      print("Saindo . . .\n")  
+      return
     elif opcao_1 == 2:
       automato: dict = {}
       expressao = str(input("Digite uma expressão (Digite 'sair' para sair): "))
@@ -32,9 +50,8 @@ def menu() -> None:
       if opcao_2 == 'y':
         escreve_no_arquivo(automato, expressao)
         print("Saindo :(\n")  
-        return                      
-              
-    elif opcao_1 == 1:
+        return                       
+    elif opcao_1 == 3:
       robocop.show()
       while (True):        
         print('\n\n')
@@ -49,5 +66,7 @@ def menu() -> None:
         print("="*128)
       print("Saindo . . .\n")  
       return
+    elif opcao_1 == 4:
+      break           
 
 menu()
