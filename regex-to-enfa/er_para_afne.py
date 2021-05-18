@@ -299,7 +299,7 @@ def formata_funcao_transicao(automato: dict) -> dict:
   regras_base = []
   novas_regras = []
   for estado in automato['estados']:
-    for simbolo in automato['alfabeto'] + ['&']:
+    for simbolo in automato['alfabeto']:
       regras_base.append([estado,simbolo])
 
   for regra in antigo_automato['funcao_transicao']:
