@@ -107,13 +107,13 @@ class AFNE:
 		return flag
 
 	def verifica_estados(self, entrada: list, estado_atual: str, estados_finais: list) -> None:
-				
 		if(entrada == []):
+			#print('est atual',estado_atual)
 			estados_finais.append(estado_atual)
 			teste: list = []
 			teste = self.e_fecho(estado_atual)
-			estados_finais.append(teste)
-			# print("Teste:",teste)
+			for obj in teste:				
+				estados_finais.append(obj)			
 			return
 
 		entrada_atual: str = entrada[0]
@@ -128,21 +128,47 @@ class AFNE:
 				flag = True
 				break
 			i += 1
-						
+			
 		if(flag):
+
 			i = 0
 			while (i < len(delta)):
 				if((estado_atual == delta[i][0]) and ((entrada_atual == delta[i][1]) or (self.get_cadeia_vazia() == delta[i][1]))):
 					#	Estado encontrado e entrada encontrada (ou cadeia vazia)
 
 					print("[",estado_atual,"]",end="")
-					print("----[",entrada_atual,"]---->",delta[i][2])
+					#	Verificando se encontrou a EPSILON ou ENTRADA NORMAL
+					if(delta[i][1] == self.get_cadeia_vazia()):
+						print("----[",self.get_cadeia_vazia(),"]---->",delta[i][2])
+					else:
+						print("----[",entrada_atual,"]---->",delta[i][2])
 					j: int = 0
 					
-					#	Testar TODAS as possibilidades
-					while( j < len(delta[i][2])):
-						self.verifica_estados(entrada[1:], delta[i][2][j],estados_finais)
-						j += 1
+					#	Utilizar o E-fecho
+					if(delta[i][1] == self.get_cadeia_vazia()):
+						# "q0", "&", ["q1", "q2"]
+
+						temp: list = []
+						for obj in delta[i][2]:
+							#	Pegando o e_fecho de cada estado resultante
+							temp = self.e_fecho(obj)
+							lista_efecho: list = []
+							
+							#	Formatando a lista para ser uma lista de strings
+							for est in temp:
+								lista_efecho.append(est)
+							
+							# ["q1", "q2", "q4"]
+
+							for estado in lista_efecho:
+								self.verifica_estados(entrada, estado, estados_finais)
+
+					else:
+						#	Entrada NORMAL
+						#	Testar TODAS as possibilidades
+						while( j < len(delta[i][2])):
+							self.verifica_estados(entrada[1:], delta[i][2][j],estados_finais)	
+							j += 1
 				i += 1
 		else:
 			estados_finais.append(estado_atual)
@@ -153,7 +179,7 @@ class AFNE:
 			return (self._estado_inicial in self._estados_finais)
 
 		entrada_processada: list = entrada.split(" ")
-
+										
 		#	Verifica Alfabeto
 		if(not self.verifica_alfabeto(entrada_processada)):
 			print("Erro: Entrada não pertence ao alfabeto.")
@@ -163,13 +189,34 @@ class AFNE:
 		flag: bool = False
 		estados_finais: list = []
 		self.verifica_estados(entrada_processada, self.get_estado_inicial(), estados_finais)
+		estados_finais = list(set(estados_finais))
 		print("Estados Alcançados:",estados_finais)
+		
 
-		#	Verifica Estados Finais	
+#    Adicionando efechos na lista de estados finais
+		temp: list = []
+		novos_estados_finais: list = []
+
+		#    Ajustar a lista de e_fecho corretamente
+		for i in estados_finais:
+			temp = self.e_fecho(i)
+			for j in temp:
+				novos_estados_finais.append(j)
+		
+		#    Inserir e_fechos ajustados à lista de estados finais original
+		for i in novos_estados_finais:
+			estados_finais.append(i)
+
+		#    Otimiza a lista de estados finais
+		estados_finais = list(set(estados_finais))
+		
+
+		print('****',estados_finais,'****')
+		#    Verifica estados finais (COM e_fechos() previamente inseridos)
 		for i in estados_finais:
 			flag = False
 			for j in self.get_estados_finais():
-				if (i == j):
+				if(i == j):
 					flag = True
 					return flag
 		return flag
