@@ -1,0 +1,17 @@
+{
+	"exemplo_1":{
+		"descricao": "Automato que reconhece que qualquer símbolo 'a' antecede qualquer símbolo 'b'.",
+		"alfabeto": ["a", "b"],
+		"estados": ["q0", "q1"],
+		"estado_inicial": "q0",
+		"estados_finais": ["q1"],
+		"funcao_transicao": [
+			["q0", "a", ["q0"]],
+			["q0", "b", []],
+			["q0", "&", ["q1"]],
+			["q1", "a", []],
+			["q1", "b", ["q1"]],
+			["q1", "&", []]
+		]
+	}
+}
