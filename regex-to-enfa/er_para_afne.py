@@ -156,7 +156,7 @@ def fechamento(automato: dict) -> dict:
   novas_regras: list = []
   for estado_final in antigo_automato['estados_finais']:
     novas_regras.insert(0,[estado_final, '&', [antigo_automato['estado_inicial']]])
-  
+    
   # cria novo estado inicial
   novo_estado_inicial: str = 'q0'
 
@@ -225,7 +225,8 @@ def printa_automato(automato: dict) -> None:
 def regex_to_afne(expressao: str):
   """
   Recebe uma expressão regular e retorna um AFNE correspodente
-  """  
+  """
+
   pilha = []
   expressao = infixo_para_prefixo(expressao)
   expressao = reverte_expressao(expressao)
@@ -266,6 +267,7 @@ def formata_funcao_transicao(automato: dict) -> dict:
   """
   Recebe um automato e o retorna com sua função transição formatada
   """
+  
   antigo_automato = deepcopy(automato)
   novo_automato = deepcopy(automato)
   nova_funcao_transicao_aux = []    

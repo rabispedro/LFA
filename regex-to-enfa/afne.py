@@ -108,11 +108,11 @@ class AFNE:
 
 	def verifica_estados(self, entrada: list, estado_atual: str, estados_finais: list) -> None:
 		if(entrada == []):
-			#print('est atual',estado_atual)
 			estados_finais.append(estado_atual)
-			teste: list = []
-			teste = self.e_fecho(estado_atual)
-			for obj in teste:				
+			e_fecho_atual: list = []
+			e_fecho_atual = self.e_fecho(estado_atual)
+
+			for obj in e_fecho_atual:				
 				estados_finais.append(obj)			
 			return
 
@@ -187,10 +187,8 @@ class AFNE:
 			for obj in estados_finais:
 				if obj in self.get_estados_finais():
 					flag = True
-					return flag
-			
+					return flag			
 			return flag
-
 
 		entrada_processada: list = entrada.split(" ")
 										
@@ -264,4 +262,4 @@ class AFNE:
 					j += 1
 				break
 			i += 1
-		return
+		return		
